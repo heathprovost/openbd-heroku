@@ -20,10 +20,9 @@ KEEP_CACHE="false"
 
 #move everything into webroot folder
 cd ${BUILD_DIR}
-if [[ -d webroot ]]; then
-  rm -rf webroot
-fi
-cp -r * webroot
+mkdir -p .webroot
+cp -r * .webroot
+mv .webroot webroot
 cd ${CACHE_DIR}
 
 #figure out version used if a thin deployment
