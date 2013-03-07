@@ -69,7 +69,7 @@ if [ $KEEP_CACHE == "false" ]; then
 fi
 
 echo "DEBUG: ${KEEP_CACHE}"
-ls $CACHE_DIR > echo
+ls $CACHE_DIR | xargs echo
 
 if [[ $OPENBD_VERSION == "unknown" && -f ${BUILD_DIR}/WEB-INF/lib/OpenBlueDragon.jar ]]; then
   # use developer supplied engine
