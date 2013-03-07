@@ -19,6 +19,7 @@ OPENBD_VERSION="unknown"
 KEEP_CACHE="false"
 
 #move everything into webroot folder
+mkdir -p ${BUILD_DIR}/webroot
 cp -r ${BUILD_DIR}/* ${BUILD_DIR}/webroot
 
 #figure out version used if a thin deployment
