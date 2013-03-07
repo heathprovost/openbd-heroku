@@ -72,7 +72,7 @@ if [[ $OPENBD_VERSION == "unknown" && -f ${BUILD_DIR}/WEB-INF/lib/OpenBlueDragon
   # use developer supplied engine
   echo -n "-----> Installing Developer Supplied OpenBD Engine..."
   if [ ! -f ${BUILD_DIR}/WEB-INF/lib/${SERVLET_ENGINE} ]; then
-    cp ${OPT_DIR}/server-engines/lib/${SERVLET_ENGINE} ${BUILD_DIR}/WEB-INF/lib
+    cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} ${BUILD_DIR}/WEB-INF/lib
   fi
   echo "done"
 else
@@ -94,7 +94,7 @@ else
   rm -rf ${BUILD_DIR}/WEB-INF
   mkdir -p ${BUILD_DIR}/WEB-INF/lib
   cp -r WEB-INF/lib/* ${BUILD_DIR}/WEB-INF/lib
-  cp ${OPT_DIR}/server-engines/lib/${SERVLET_ENGINE} WEB-INF/lib
+  cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} WEB-INF/lib
   mkdir -p ${BUILD_DIR}/WEB-INF/webresources
   cp -r WEB-INF/webresources/* ${BUILD_DIR}/WEB-INF/webresources
   echo "done"
