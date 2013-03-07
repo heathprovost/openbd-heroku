@@ -137,8 +137,9 @@ echo " done"
 
 #fixup bluedragon.xml
 echo -n "-----> Patching bluedragon.xml..."
-sed -i "s#<trustcache>.*#<trustcache>true</trustcache>#" ${BUILD_DIR}/WEB-INF/bluedragon/bluedragon.xml
-awk '/<system/{doit=1} doit{sub(/<password>[^<]+<\/password>/, "<password>$OPENBD_PASSWORD</password>"); print} /<\/system>/{doit=0}' ${BUILD_DIR}/WEB-INF/bluedragon/bluedragon.xml > ${BUILD_DIR}/WEB-INF/bluedragon/bluedragon.xml
+cd ${BUILD_DIR}/WEB-INF/bluedragon
+sed -i "s#<trustcache>.*#<trustcache>true</trustcache>#" bluedragon.xml
+awk '/<system/{doit=1} doit{sub(/<password>[^<]+<\/password>/, "<password>$OPENBD_PASSWORD</password>"); print} /<\/system>/{doit=0}' bluedragon.xml | bluedragon.xml.tmp && mv bluedragon.xml.tmp bluedragon.xml 
 echo " done"
 
 logger -p user.notice -t "slugc[$$]" "openbd - compile complete $LOGGER_FLAGS"
