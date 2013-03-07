@@ -8,7 +8,9 @@ logger -p user.notice -t "slugc[$$]" "openbd - compile start"
 
 BIN_DIR=$(cd $(dirname $0); pwd) # absolute path
 # parse args
-OPT_DIR=$BIN_DIR/../opt
+ORGSUFF=bin
+NEWSUFF=opt
+OPT_DIR=${BIN_DIR%$ORGSUFF}$NEWSUFF
 SERVLET_ENGINE="winstone-lite-0.9.10.jar"
 BUILD_DIR=$1
 CACHE_DIR=$2
@@ -62,7 +64,7 @@ elif [[ -f ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-3.0.txt ]]; then
   fi
 fi
 
-if [ $KEEP_CACHE == "false"]; then
+if [ $KEEP_CACHE == "false" ]; then
   rm -rf $CACHE_DIR
 fi
 
