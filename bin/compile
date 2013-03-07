@@ -19,8 +19,9 @@ OPENBD_VERSION="unknown"
 KEEP_CACHE="false"
 
 #move everything into webroot folder
-mkdir -p ${BUILD_DIR}/webroot
-cp -r ${BUILD_DIR}/* ${BUILD_DIR}/webroot
+cd ${BUILD_DIR}
+cp -r * webroot
+cd ${CACHE_DIR}
 
 #figure out version used if a thin deployment
 if [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-nightly.txt ]]; then
