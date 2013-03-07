@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!-- 
+  This file has been modified slightly from the version(s) included with OpenBD. The modifications are as follows:
+    1. Normalized to work with all stable release versions of the OpenBD engine from 1.1 onward.
+    2. Removed cfmail smtpserver setting (there is never a smtpserver on locaolhost on heroku).
+    3. Removed example customtags and nativetags.
+-->
+<server>
+  <system>
+    <resourcepath>/WEB-INF/resources</resourcepath>
+    <licensekey></licensekey>
+    <component-cfc>/WEB-INF/bluedragon/component.cfc</component-cfc>
+    <whitespacecomp>false</whitespacecomp>
+    <nativelibdir>/WEB-INF/bin</nativelibdir>
+    <missingtemplatehandler></missingtemplatehandler>
+    <lastfile></lastfile>
+    <errorhandler></errorhandler>
+    <buffersize>0</buffersize>
+    <tempdirectory>/WEB-INF/bluedragon/work/temp</tempdirectory>
+    <password>admin</password>
+    <defaultcharset>utf-8</defaultcharset>
+    <lastupdated></lastupdated>
+  </system>
+  <file>
+    <maxfiles>1000</maxfiles>
+    <trustcache>false</trustcache>
+  </file>
+  <javacustomtags>
+    <classes>/WEB-INF/classes</classes>
+  </javacustomtags>
+  <cfquery>
+    <cache>true</cache>
+  </cfquery>
+  <cfapplication>
+    <clientstorage>cookie</clientstorage>
+    <enabled>true</enabled>
+    <sessiontimeout>#CreateTimeSpan(0,0,20,0)#</sessiontimeout>
+    <applicationtimeout>#CreateTimeSpan(2,0,0,0)#</applicationtimeout>
+    <j2eesession>false</j2eesession>
+  </cfapplication>
+  <cfmail>
+    <interval>240</interval>
+    <smtpserver></smtpserver>
+    <smtpport>25</smtpport>
+    <charset>UTF-8</charset>
+  </cfmail>
+  <cfmlcustomtags>
+    <mapping name="cf">
+      <directory>/WEB-INF/customtags</directory>
+      <name>cf</name>
+    </mapping>
+  </cfmlcustomtags>
+</server>

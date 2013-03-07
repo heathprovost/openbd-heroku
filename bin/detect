@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# bin/use <build-dir>
+
+if [[ -f $1/index.cfm || -f $1/Application.cfm || -f $1/Application.cfc || -f $1/WEB-INF/bluedragon/bluedragon.xml || -f $1/WEB-INF/lib/OpenBlueDragon.jar ]]; then
+	echo "OpenBD" && exit 0
+else
+  echo "no" && exit 1
+fi
