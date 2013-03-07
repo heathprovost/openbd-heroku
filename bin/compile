@@ -118,6 +118,9 @@ else
     mkdir -p ${BUILD_DIR}/WEB-INF/webresources
     cp -r WEB-INF/webresources/* ${BUILD_DIR}/WEB-INF/webresources
   fi
+  if [ ! -f ${BUILD_DIR}/WEB-INF/lib/${SERVLET_ENGINE} ]; then
+    cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} ${BUILD_DIR}/WEB-INF/lib
+  fi
   echo "done"
 fi
 
