@@ -91,7 +91,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       opts = opts + "--remote #{remote}"
     end
     opts = opts + "--addons #{addons}" unless addons.nil?
-    system "heroku apps:create #{name} #{opts} --stack cedar --buildpack http://github.com/heathprovost/heroku-buildpack-openbd.git"
+    system "heroku apps:create #{name} #{opts} --stack cedar --buildpack http://github.com/heathprovost/openbd-heroku.git"
     system "heroku config:set OPENBD_PASSWORD=#{password} --app #{name}"
   end
 
