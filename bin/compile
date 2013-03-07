@@ -138,7 +138,7 @@ echo " done"
 #fixup bluedragon.xml
 echo -n "-----> Patching bluedragon.xml..."
 cd ${BUILD_DIR}/WEB-INF/bluedragon
-sed -i "s#<trustcache>.*#<trustcache>true</trustcache>#" bluedragon.xml
+awk "/<file/{doit=1} doit{sub(/<trustcache>[^<]+<\/trustcache>/, \"<trustcache>true</trustcache>\")} /<\/file>/{doit=0}{print}" bluedragon.xml > bluedragon.xml.tmp && mv bluedragon.xml.tmp bluedragon.xml 
 awk "/<system/{doit=1} doit{sub(/<password>[^<]+<\/password>/, \"<password>$OPENBD_PASSWORD</password>\")} /<\/system>/{doit=0}{print}" bluedragon.xml > bluedragon.xml.tmp && mv bluedragon.xml.tmp bluedragon.xml 
 echo " done"
 
