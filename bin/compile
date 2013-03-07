@@ -18,48 +18,51 @@ LOGGER_FLAGS=""
 OPENBD_VERSION="unknown"
 KEEP_CACHE="false"
 
+#move everything into webroot folder
+cp -r ${BUILD_DIR}/* ${BUILD_DIR}/webroot
+
 #figure out version used if a thin deployment
-if [[ -f ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-nightly.txt ]]; then
+if [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-nightly.txt ]]; then
   OPENBD_VERSION="nightly"
   KEEP_CACHE="false" #never cache nightlies
-elif [[ -f ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-1.1.txt ]]; then
+elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.1.txt ]]; then
   OPENBD_VERSION="1.1"
-  if [[ -f ${CACHE_DIR}/WEB-INF/lib/openbd-heroku-readme-1.1.txt ]]; then
+  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.1.txt ]]; then
     KEEP_CACHE="true"
   fi
-elif [[ -f ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-1.2.txt ]]; then
+elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.2.txt ]]; then
   OPENBD_VERSION="1.2"
-  if [[ -f ${CACHE_DIR}/WEB-INF/lib/openbd-heroku-readme-1.2.txt ]]; then
+  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.2.txt ]]; then
     KEEP_CACHE="true"
   fi
-elif [[ -f ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-1.3.txt ]]; then
+elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.3.txt ]]; then
   OPENBD_VERSION="1.3"
-  if [[ -f ${CACHE_DIR}/WEB-INF/lib/openbd-heroku-readme-1.3.txt ]]; then
+  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.3.txt ]]; then
     KEEP_CACHE="true"
   fi
-elif [[ -f ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-1.4.txt ]]; then
+elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.4.txt ]]; then
   OPENBD_VERSION="1.4"
-  if [[ -f ${CACHE_DIR}/WEB-INF/lib/openbd-heroku-readme-1.4.txt ]]; then
+  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.4.txt ]]; then
     KEEP_CACHE="true"
   fi
-elif [[ -f ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-2.0.txt ]]; then
+elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.txt ]]; then
   OPENBD_VERSION="2.0"
-  if [[ -f ${CACHE_DIR}/WEB-INF/lib/openbd-heroku-readme-2.0.txt ]]; then
+  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.txt ]]; then
     KEEP_CACHE="true"
   fi
-elif [[ -f ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-2.0.1.txt ]]; then
+elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.1.txt ]]; then
   OPENBD_VERSION="2.0.1"
-  if [[ -f ${CACHE_DIR}/WEB-INF/lib/openbd-heroku-readme-2.0.1.txt ]]; then
+  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.1.txt ]]; then
     KEEP_CACHE="true"
   fi
-elif [[ -f ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-2.0.2.txt ]]; then
+elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.2.txt ]]; then
   OPENBD_VERSION="2.0.2"
-  if [[ -f ${CACHE_DIR}/WEB-INF/lib/openbd-heroku-readme-2.0.2.txt ]]; then
+  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.2.txt ]]; then
     KEEP_CACHE="true"
   fi
-elif [[ -f ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-3.0.txt ]]; then
+elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-3.0.txt ]]; then
   OPENBD_VERSION="3.0"
-  if [[ -f ${CACHE_DIR}/WEB-INF/lib/openbd-heroku-readme-3.0.txt ]]; then
+  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-3.0.txt ]]; then
     KEEP_CACHE="true"
   fi
 fi
@@ -68,61 +71,63 @@ if [ $KEEP_CACHE == "false" ]; then
   rm -rf $CACHE_DIR
 fi
 
-if [[ $OPENBD_VERSION == "unknown" && -f ${BUILD_DIR}/WEB-INF/lib/OpenBlueDragon.jar ]]; then
+if [[ $OPENBD_VERSION == "unknown" && -f ${BUILD_DIR}/webroot/WEB-INF/lib/OpenBlueDragon.jar ]]; then
   # use developer supplied engine
   echo -n "-----> Installing Developer Supplied OpenBD Engine..."
-  if [ ! -f ${BUILD_DIR}/WEB-INF/lib/${SERVLET_ENGINE} ]; then
-    cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} ${BUILD_DIR}/WEB-INF/lib
+  if [ ! -f ${BUILD_DIR}/${SERVLET_ENGINE} ]; then
+    cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} ${BUILD_DIR}
   fi
   echo " done"
 else
   # use thin deployment. Install OpenBD and overlay developer supplied files
-  if [[ ! -d $CACHE_DIR && ! -L $CACHE_DIR ]]; then
+  if [[ ! -d $CACHE_DIR/webroot ]]; then
     echo -n "-----> Downloading OpenBD ${OPENBD_VERSION}..."
     mkdir -p $CACHE_DIR
     cd $CACHE_DIR
+    mkdir -p webroot
+    cd webroot
     logger -p user.notice -t "slugc[$$]" "openbd - download war file"
     curl -o openbd.war --silent --location http://openbd.org/download/${OPENBD_VERSION}/openbd.war
     logger -p user.notice -t "slugc[$$]" "openbd - explode war file"
     jar xf openbd.war
-    cp -r ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-${OPENBD_VERSION}.txt ${CACHE_DIR}/WEB-INF/lib
+    cp -r ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-${OPENBD_VERSION}.txt ${CACHE_DIR}/webroot/WEB-INF/lib
     echo " done"
   else
-    cd $CACHE_DIR
+    cd $CACHE_DIR/webroot
   fi  
   echo -n "-----> Installing OpenBD ${OPENBD_VERSION}..."
-  if [ -f ${BUILD_DIR}/bluedragon ]; then
-    mv ${BUILD_DIR}/bluedragon ${BUILD_DIR}/org-bluedragon
-    mkdir -p ${BUILD_DIR}/bluedragon
-    cp -r bluedragon/* ${BUILD_DIR}/bluedragon
-    cp -r ${BUILD_DIR}/org-bluedragon/* ${BUILD_DIR}/bluedragon
-    rm -rf ${BUILD_DIR}/org-bluedragon
+  if [ -f ${BUILD_DIR}/webroot/bluedragon ]; then
+    mv ${BUILD_DIR}/webroot/bluedragon ${BUILD_DIR}/org-bluedragon
+    mkdir -p ${BUILD_DIR}/webroot/bluedragon
+    cp -r bluedragon/* ${BUILD_DIR}/webroot/bluedragon
+    cp -r ${BUILD_DIR}/webroot/org-bluedragon/* ${BUILD_DIR}/webroot/bluedragon
+    rm -rf ${BUILD_DIR}/webroot/org-bluedragon
   else
-    mkdir -p ${BUILD_DIR}/bluedragon
-    cp -r bluedragon/* ${BUILD_DIR}/bluedragon
+    mkdir -p ${BUILD_DIR}/webroot/bluedragon
+    cp -r bluedragon/* ${BUILD_DIR}/webroot/bluedragon
   fi
-  if [ -f ${BUILD_DIR}/WEB-INF/lib ]; then
-    mv ${BUILD_DIR}/WEB-INF/lib ${BUILD_DIR}/WEB-INF/org-lib
-    mkdir -p ${BUILD_DIR}/WEB-INF/lib
-    cp -r WEB-INF/lib/* ${BUILD_DIR}/WEB-INF/lib
-    cp -r ${BUILD_DIR}/WEB-INF/org-lib/* ${BUILD_DIR}/WEB-INF/lib
-    rm -rf ${BUILD_DIR}/WEB-INF/org-lib
+  if [ -f ${BUILD_DIR}/webroot/WEB-INF/lib ]; then
+    mv ${BUILD_DIR}/webroot/WEB-INF/lib ${BUILD_DIR}/webroot/WEB-INF/org-lib
+    mkdir -p ${BUILD_DIR}/webroot/WEB-INF/lib
+    cp -r WEB-INF/lib/* ${BUILD_DIR}/webroot/WEB-INF/lib
+    cp -r ${BUILD_DIR}/webroot/WEB-INF/org-lib/* ${BUILD_DIR}/webroot/WEB-INF/lib
+    rm -rf ${BUILD_DIR}/webroot/WEB-INF/org-lib
   else
-    mkdir -p ${BUILD_DIR}/WEB-INF/lib
-    cp -r WEB-INF/lib/* ${BUILD_DIR}/WEB-INF/lib
+    mkdir -p ${BUILD_DIR}/webroot/WEB-INF/lib
+    cp -r WEB-INF/lib/* ${BUILD_DIR}/webroot/WEB-INF/lib
   fi
-  if [ -f ${BUILD_DIR}/WEB-INF/webresources ]; then
-    mv ${BUILD_DIR}/WEB-INF/webresources ${BUILD_DIR}/WEB-INF/org-webresources
-    mkdir -p ${BUILD_DIR}/WEB-INF/webresources
-    cp -r WEB-INF/webresources/* ${BUILD_DIR}/WEB-INF/webresources
-    cp -r ${BUILD_DIR}/WEB-INF/org-webresources/* ${BUILD_DIR}/WEB-INF/webresources
-    rm -rf ${BUILD_DIR}/WEB-INF/org-webresources
+  if [ -f ${BUILD_DIR}/webroot/WEB-INF/webresources ]; then
+    mv ${BUILD_DIR}/webroot/WEB-INF/webresources ${BUILD_DIR}/webroot/WEB-INF/org-webresources
+    mkdir -p ${BUILD_DIR}/webroot/WEB-INF/webresources
+    cp -r WEB-INF/webresources/* ${BUILD_DIR}/webroot/WEB-INF/webresources
+    cp -r ${BUILD_DIR}/webroot/WEB-INF/org-webresources/* ${BUILD_DIR}/webroot/WEB-INF/webresources
+    rm -rf ${BUILD_DIR}/webroot/WEB-INF/org-webresources
   else
-    mkdir -p ${BUILD_DIR}/WEB-INF/webresources
-    cp -r WEB-INF/webresources/* ${BUILD_DIR}/WEB-INF/webresources
+    mkdir -p ${BUILD_DIR}/webroot/WEB-INF/webresources
+    cp -r WEB-INF/webresources/* ${BUILD_DIR}/webroot/WEB-INF/webresources
   fi
-  if [ ! -f ${BUILD_DIR}/WEB-INF/lib/${SERVLET_ENGINE} ]; then
-    cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} ${BUILD_DIR}/WEB-INF/lib
+  if [ ! -f ${BUILD_DIR}/${SERVLET_ENGINE} ]; then
+    cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} ${BUILD_DIR}
   fi
   echo " done"
 fi
@@ -131,13 +136,16 @@ fi
 if [ -f ${BUILD_DIR}/Procfile ]; then
   rm -rf ${BUILD_DIR}/Procfile
 fi
+if [ -f ${BUILD_DIR}/webroot/Procfile ]; then
+  rm -rf ${BUILD_DIR}/webroot/Procfile
+fi
 echo -n "-----> Generating Procfile..."
-echo -e "web: java \$JAVA_OPTS -Dlog4j.configuration=file:WEB-INF/bluedragon/log4j.properties -jar WEB-INF/lib/${SERVLET_ENGINE} --webroot=. --httpPort=\$PORT" >> ${BUILD_DIR}/Procfile
+echo -e "web: java \$JAVA_OPTS -Dlog4j.configuration=file:webroot/WEB-INF/bluedragon/log4j.properties -jar ${SERVLET_ENGINE} --webroot=./webroot --httpPort=\$PORT" >> ${BUILD_DIR}/Procfile
 echo " done"
 
 #fixup bluedragon.xml
 echo -n "-----> Patching bluedragon.xml..."
-cd ${BUILD_DIR}/WEB-INF/bluedragon
+cd ${BUILD_DIR}/webroot/WEB-INF/bluedragon
 awk "/<file/{doit=1} doit{sub(/<trustcache>[^<]+<\/trustcache>/, \"<trustcache>true</trustcache>\")} /<\/file>/{doit=0}{print}" bluedragon.xml > bluedragon.xml.tmp && mv bluedragon.xml.tmp bluedragon.xml 
 awk "/<system/{doit=1} doit{sub(/<password>[^<]+<\/password>/, \"<password>$OPENBD_PASSWORD</password>\")} /<\/system>/{doit=0}{print}" bluedragon.xml > bluedragon.xml.tmp && mv bluedragon.xml.tmp bluedragon.xml 
 echo " done"
