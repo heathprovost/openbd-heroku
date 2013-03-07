@@ -107,6 +107,5 @@ fi
 echo -n "-----> Installing Default Procfile..."
 echo -e "web: java $JAVA_OPTS -Dlog4j.configuration=file:WEB-INF/bluedragon/log4j.properties -jar WEB-INF/lib/${SERVLET_ENGINE} --webroot=. --httpPort=$PORT" >> ${BUILD_DIR}/Procfile
 echo "done"
-fi
 
 logger -p user.notice -t "slugc[$$]" "openbd - compile complete $LOGGER_FLAGS"
