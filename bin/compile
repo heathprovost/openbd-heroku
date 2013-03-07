@@ -20,6 +20,9 @@ KEEP_CACHE="false"
 
 #move everything into webroot folder
 cd ${BUILD_DIR}
+if [[ -d webroot ]]; then
+  rm -rf webroot
+fi
 cp -r * webroot
 cd ${CACHE_DIR}
 
