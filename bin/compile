@@ -137,5 +137,6 @@ echo " done"
 
 #fixup bluedragon.xml
 sed -i 's#<trustcache>.*#<trustcache>true</trustcache>#' ${BUILD_DIR}/WEB-INF/bluedragon/bluedragon.xml
+sed -i '0,s#<password>.*#<password>true</password>#' ${BUILD_DIR}/WEB-INF/bluedragon/bluedragon.xml
 
 logger -p user.notice -t "slugc[$$]" "openbd - compile complete $LOGGER_FLAGS"

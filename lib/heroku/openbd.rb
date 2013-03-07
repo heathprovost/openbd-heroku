@@ -93,6 +93,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
     opts = opts + "--addons #{addons}" unless addons.nil?
     system "heroku apps:create #{name} #{opts} --stack cedar --buildpack http://github.com/heathprovost/openbd-heroku.git"
     system "heroku config:set OPENBD_PASSWORD=#{password} --app #{name}"
+    system "heroku labs:enable user-env-compile --app #{name}"
   end
 
   # openbd:update
