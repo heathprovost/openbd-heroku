@@ -68,6 +68,9 @@ if [ $KEEP_CACHE == "false" ]; then
   rm -rf $CACHE_DIR
 fi
 
+echo "DEBUG: ${KEEP_CACHE}"
+ls $CACHE_DIR > echo
+
 if [[ $OPENBD_VERSION == "unknown" && -f ${BUILD_DIR}/WEB-INF/lib/OpenBlueDragon.jar ]]; then
   # use developer supplied engine
   echo -n "-----> Installing Developer Supplied OpenBD Engine..."
