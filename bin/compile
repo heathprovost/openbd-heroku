@@ -74,7 +74,7 @@ if [[ $OPENBD_VERSION == "unknown" && -f ${BUILD_DIR}/WEB-INF/lib/OpenBlueDragon
   if [ ! -f ${BUILD_DIR}/WEB-INF/lib/${SERVLET_ENGINE} ]; then
     cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} ${BUILD_DIR}/WEB-INF/lib
   fi
-  echo "done"
+  echo " done"
 else
   # use thin deployment. Install OpenBD and overlay developer supplied files
   if [ ! -f ${CACHE_DIR} ]; then
@@ -86,7 +86,7 @@ else
     logger -p user.notice -t "slugc[$$]" "openbd - explode war file"
     jar xf openbd.war
     cp -r ${BUILD_DIR}/WEB-INF/lib/openbd-heroku-readme-${OPENBD_VERSION}.txt ${CACHE_DIR}/WEB-INF/lib
-    echo "done"
+    echo " done"
   else
     cd $CACHE_DIR
   fi  
@@ -124,7 +124,7 @@ else
   if [ ! -f ${BUILD_DIR}/WEB-INF/lib/${SERVLET_ENGINE} ]; then
     cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} ${BUILD_DIR}/WEB-INF/lib
   fi
-  echo "done"
+  echo " done"
 fi
 
 # install Procfile
@@ -133,6 +133,6 @@ if [ -f ${BUILD_DIR}/Procfile ]; then
 fi
 echo -n "-----> Installing Default Procfile..."
 echo -e "web: java \$JAVA_OPTS -Dlog4j.configuration=file:WEB-INF/bluedragon/log4j.properties -jar WEB-INF/lib/${SERVLET_ENGINE} --webroot=. --httpPort=\$PORT" >> ${BUILD_DIR}/Procfile
-echo "done"
+echo " done"
 
 logger -p user.notice -t "slugc[$$]" "openbd - compile complete $LOGGER_FLAGS"
