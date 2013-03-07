@@ -77,8 +77,8 @@ if [[ $OPENBD_VERSION == "unknown" && -f ${BUILD_DIR}/WEB-INF/lib/OpenBlueDragon
   echo "done"
 else
   # use thin deployment. Install OpenBD and overlay developer supplied files
-  echo -n "-----> Installing OpenBD ${OPENBD_VERSION}..."
   if [ ! -d $CACHE_DIR ]; then
+    echo -n "-----> Downloading OpenBD ${OPENBD_VERSION}..."
     mkdir -p $CACHE_DIR
     cd $CACHE_DIR
     logger -p user.notice -t "slugc[$$]" "openbd - download war file"
@@ -88,6 +88,7 @@ else
   else
     cd $CACHE_DIR
   fi  
+  echo -n "-----> Installing OpenBD ${OPENBD_VERSION}..."
   if [ -f ${BUILD_DIR}/bluedragon ]; then
     mv ${BUILD_DIR}/bluedragon ${BUILD_DIR}/org-bluedragon
     mkdir -p ${BUILD_DIR}/bluedragon
@@ -103,6 +104,7 @@ else
     mkdir -p ${BUILD_DIR}/WEB-INF/lib
     cp -r WEB-INF/lib/* ${BUILD_DIR}/WEB-INF/lib
     cp -r ${BUILD_DIR}/WEB-INF/org-lib/* ${BUILD_DIR}/WEB-INF/lib
+    cp -r ${BUILD_DIR}/WEB-INF/org-lib/openbd-heroku-readme-*.txt ${CACHE_DIR}/WEB-INF/lib
     rm -rf ${BUILD_DIR}/WEB-INF/org-lib
   else
     mkdir -p ${BUILD_DIR}/WEB-INF/lib
