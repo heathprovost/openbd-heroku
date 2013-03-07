@@ -68,9 +68,6 @@ if [ $KEEP_CACHE == "false" ]; then
   rm -rf $CACHE_DIR
 fi
 
-echo "DEBUG: ${KEEP_CACHE}"
-ls $CACHE_DIR | xargs echo
-
 if [[ $OPENBD_VERSION == "unknown" && -f ${BUILD_DIR}/WEB-INF/lib/OpenBlueDragon.jar ]]; then
   # use developer supplied engine
   echo -n "-----> Installing Developer Supplied OpenBD Engine..."
@@ -80,7 +77,7 @@ if [[ $OPENBD_VERSION == "unknown" && -f ${BUILD_DIR}/WEB-INF/lib/OpenBlueDragon
   echo " done"
 else
   # use thin deployment. Install OpenBD and overlay developer supplied files
-  if [ ! -f ${CACHE_DIR} ]; then
+  if [[ ! -d $CACHE_DIR && ! -L $CACHE_DIR ]]; then
     echo -n "-----> Downloading OpenBD ${OPENBD_VERSION}..."
     mkdir -p $CACHE_DIR
     cd $CACHE_DIR
