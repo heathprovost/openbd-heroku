@@ -88,15 +88,36 @@ else
   else
     cd $CACHE_DIR
   fi  
-  rm -rf ${BUILD_DIR}/bluedragon
-  mkdir -p ${BUILD_DIR}/bluedragon
-  cp -r bluedragon/* ${BUILD_DIR}/bluedragon
-  rm -rf ${BUILD_DIR}/WEB-INF
-  mkdir -p ${BUILD_DIR}/WEB-INF/lib
-  cp -r WEB-INF/lib/* ${BUILD_DIR}/WEB-INF/lib
-  cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} WEB-INF/lib
-  mkdir -p ${BUILD_DIR}/WEB-INF/webresources
-  cp -r WEB-INF/webresources/* ${BUILD_DIR}/WEB-INF/webresources
+  if [ -f ${BUILD_DIR}/bluedragon ]; then
+    mv ${BUILD_DIR}/bluedragon ${BUILD_DIR}/org-bluedragon
+    mkdir -p ${BUILD_DIR}/bluedragon
+    cp -r bluedragon/* ${BUILD_DIR}/bluedragon
+    cp -r ${BUILD_DIR}/org-bluedragon/* ${BUILD_DIR}/bluedragon
+    rm -rf ${BUILD_DIR}/org-bluedragon
+  else
+    mkdir -p ${BUILD_DIR}/bluedragon
+    cp -r bluedragon/* ${BUILD_DIR}/bluedragon
+  fi
+  if [ -f ${BUILD_DIR}/WEB-INF/lib ]; then
+    mv ${BUILD_DIR}/WEB-INF/lib ${BUILD_DIR}/WEB-INF/org-lib
+    mkdir -p ${BUILD_DIR}/WEB-INF/lib
+    cp -r WEB-INF/lib/* ${BUILD_DIR}/WEB-INF/lib
+    cp -r ${BUILD_DIR}/WEB-INF/org-lib/* ${BUILD_DIR}/WEB-INF/lib
+    rm -rf ${BUILD_DIR}/WEB-INF/org-lib
+  else
+    mkdir -p ${BUILD_DIR}/WEB-INF/lib
+    cp -r WEB-INF/lib/* ${BUILD_DIR}/WEB-INF/lib
+  fi
+  if [ -f ${BUILD_DIR}/WEB-INF/webresources ]; then
+    mv ${BUILD_DIR}/WEB-INF/webresources ${BUILD_DIR}/WEB-INF/org-webresources
+    mkdir -p ${BUILD_DIR}/WEB-INF/webresources
+    cp -r WEB-INF/webresources/* ${BUILD_DIR}/WEB-INF/webresources
+    cp -r ${BUILD_DIR}/WEB-INF/org-webresources/* ${BUILD_DIR}/WEB-INF/webresources
+    rm -rf ${BUILD_DIR}/WEB-INF/org-webresources
+  else
+    mkdir -p ${BUILD_DIR}/WEB-INF/webresources
+    cp -r WEB-INF/webresources/* ${BUILD_DIR}/WEB-INF/webresources
+  fi
   echo "done"
 fi
 
