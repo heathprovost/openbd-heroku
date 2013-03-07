@@ -85,6 +85,7 @@ else
     curl -o openbd.war --silent --location http://openbd.org/download/${OPENBD_VERSION}/openbd.war
     logger -p user.notice -t "slugc[$$]" "openbd - explode war file"
     jar xf openbd.war
+    echo "done"
   else
     cd $CACHE_DIR
   fi  
