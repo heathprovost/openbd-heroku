@@ -7,7 +7,6 @@ Prerequisites
 -----
 
 * [Java JVM](http://www.java.com/en/download/index.jsp)
-* [OpenBD Desktop](http://openbd.org/downloads/)
 * [Heroku Toolbelt](https://toolbelt.heroku.com/)
 
 Overview
