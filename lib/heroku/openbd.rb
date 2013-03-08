@@ -65,15 +65,18 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   # -p, --password PASSWORD    # admin console password, default auto generated
   #
   #This command acts as an alias for 'heroku apps:create', supplying some 
-  #hardcoded options and setting config variables. Internally it does the
+  #hardcoded options, setting config variables and options. Internally it does the
   #following: 
   #
   # $ heroku create [NAME] 
   #  --stack cedar 
-  #  --buildpack http://github.com/heathprovost/heroku-buildpack-openbd.git
+  #  --buildpack http://github.com/heathprovost/openbd-heroku.git
   #
   # $ heroku config:set
   #  OPENBD_PASSWORD=[PASSWORD]
+  #  --app [NAME]
+  #
+  # $ heroku labs:enable user-env-compile
   #  --app [NAME]
   #
   def create

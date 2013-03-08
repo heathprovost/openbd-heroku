@@ -24,7 +24,7 @@ Assuming you already have all the prerequisites covered...
 
 1. Install the plugin and read the basic help
 		
-		$ heroku plugins:install https://github.com/heathprovost/openbd-heroku.git
+		$ heroku plugins:install http://github.com/heathprovost/openbd-heroku.git
 		$ heroku help openbd
 
 2. Generate a new project and run it locally
