@@ -93,6 +93,7 @@ else
     curl -o openbd.war --silent --location http://openbd.org/download/${OPENBD_VERSION}/openbd.war
     logger -p user.notice -t "slugc[$$]" "openbd - explode war file"
     jar xf openbd.war
+    rm -f openbd.war
     cp -r ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-${OPENBD_VERSION}.txt ${CACHE_DIR}/webroot/WEB-INF/lib
     echo " done"
   else
