@@ -1,7 +1,7 @@
 require "heroku/command/base"
 require "open-uri"
 require "fileutils"
-require "zlib"
+require "zip/zip"
 
 # manage openbd projects and deployments
 #
@@ -145,7 +145,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       files = Dir.glob("#{project_dir}/WEB-INF/customtags/*")
       FileUtils.rm_r files
       write_file "#{project_dir}/.gitignore", "/Procfile\n/.env\n/WEB-INF/bluedragon/work/\n/WEB-INF/bluedragon/bluedragon.xml.bak.*\n"
-      write_file "#{project_dir}/.env", "PORT=8080\nJAVA_OPTS=-Xmx384m -Xss512k -XX:+UseCompressedOops" 
+      write_file "#{project_dir}/.env", "HOME=#{ENV["HOME"]}\nPORT=8080\nJAVA_OPTS=-Xmx384m -Xss512k -XX:+UseCompressedOops" 
       write_file "#{project_dir}/Procfile", "web: java $JAVA_OPTS -Dlog4j.configuration=file:WEB-INF/bluedragon/log4j.properties -jar $HOME/.heroku/plugins/openbd-heroku/opt/server-engines/winstone-lite-0.9.10.jar --webroot=. --httpPort=$PORT"
     else
       #Copy required directories
@@ -196,7 +196,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       FileUtils.mkdir_p File.dirname("#{project_dir}/WEB-INF/lib/openbd-heroku-readme-#{version}.txt")
       FileUtils.cp "#{PLUGIN_PATH}/opt/patches/WEB-INF/lib/openbd-heroku-readme.txt", "#{project_dir}/WEB-INF/lib/openbd-heroku-readme-#{version}.txt"
       write_file "#{project_dir}/.gitignore", "/Procfile\n/.env\n/bluedragon/\n/WEB-INF/bluedragon/work/\n/WEB-INF/webresources/\n/WEB-INF/bluedragon/bluedragon.xml.bak.*\n"
-      write_file "#{project_dir}/.env", "PORT=8080\nJAVA_OPTS=-Xmx384m -Xss512k -XX:+UseCompressedOops" 
+      write_file "#{project_dir}/.env", "HOME=#{ENV["HOME"]}\nPORT=8080\nJAVA_OPTS=-Xmx384m -Xss512k -XX:+UseCompressedOops" 
       write_file "#{project_dir}/Procfile", "web: java $JAVA_OPTS -Dlog4j.configuration=file:WEB-INF/bluedragon/log4j.properties -jar $HOME/.heroku/plugins/openbd-heroku/opt/server-engines/winstone-lite-0.9.10.jar --commonLibFolder=$HOME/.openbd-heroku/cache/#{version}/WEB-INF/lib --webroot=. --httpPort=$PORT"
     end
     #Copy patched files
