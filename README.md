@@ -20,9 +20,7 @@ can go from nothing to running on heroku in less than 5 minutes - really.
 Quick Start
 -----
 
-Don't want to read, here is a quick start section.
-
-Assuming you already have all the prerequisites...
+Assuming you already have all the prerequisites covered...
 
 1. Install the plugin and read the basic help
 		
