@@ -33,6 +33,8 @@ Assuming you already have all the prerequisites covered...
 		$ cd your-app-name
 		$ foreman start
 
+		goto http://localhost:8080/ to see your running site
+
 3. Put it in git
 
 		$ git init
