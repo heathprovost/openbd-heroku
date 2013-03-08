@@ -231,7 +231,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       if do_copy
         FileUtils.mkdir_p File.dirname("#{project_dir}#{file}")
         FileUtils.cp "#{PLUGIN_PATH}/opt/patches#{file}", "#{project_dir}#{file}"
-        if overwrite_config
+        if overwrite_config or full_engine
           redisplay "-----> Patching #{file}... done\n"
         else
           v_redisplay "-----> Patching #{file}... done\n"
