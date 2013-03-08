@@ -70,12 +70,21 @@ releases from 1.1 all the way up to 3.0 are supported. You can even run the nigh
 build if you want to. The only restriction is this only works if you use thin deployments (the default). If you choose to use full engine deployments youll have
 to fiddle with upgrading things yourself.
 
+Note: Make sure to commit your changes to git after running this command.
+
 ### openbd:create
 
 This command creates your application on Heroku. It works and acts more or less like the standard "heroku create" command, but it takes care of a bunch of boilerplate for
 you. It knows which buildpack to assign and takes care of doing that part for you. You
 can also set a password for the admin console (or let the plugin generate a strong password for you). This password will be used when your app is deployed on Heroku, so
 you do not have to expose your password in revision control.
+
+Buildpack
+-----
+
+The buildpack will download and provision OpenBD engines as needed. It will keep a copy of the last engine version cached at all times, allowing subsequent deployments to skip
+download the engine. An average cached deployment only takes about 10 seconds or so.
+
 
 License
 -------
