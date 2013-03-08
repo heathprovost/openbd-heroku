@@ -25,17 +25,24 @@ Don't want to read, here is a quick start section.
 Assuming you already have all the prerequisites...
 
 1. Install the plugin and read the basic help
+		
 		$ heroku plugins:install https://github.com/heathprovost/openbd-heroku.git
 		$ heroku help openbd
+
 2. Generate a new project and run it locally
+		
 		$ heroku openbd:generate your-app-name
 		$ cd your-app-name
 		$ foreman start
+
 3. Put it in git
+
 		$ git init
 		$ git add .
 		$ git commit -m "1st commit"
+
 4. Create, deploy, and view on Heroku
+
 		$ heroku openbd:create your-app-name
 		$ git push heroku master
 		$ heroku open		 
