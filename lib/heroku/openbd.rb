@@ -81,22 +81,59 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   #
   def create
     name = shift_argument || options[:app] || ENV['HEROKU_APP']
+    validate_arguments!
     no_remote = !options[:no_remote].nil?
     remote = options[:remote]
     remote = "heroku" if remote == nil
     addons = options[:addons]
     password = options[:password]
     password = newpass if password == nil
-    opts = ""
-    if no_remote
-      opts = opts + "--no-remote "
-    else
-      opts = opts + "--remote #{remote}"
+    info = api.post_app({
+      "name" => name,
+      "stack" => "cedar"
+    }).body
+    begin
+      action("Creating #{info['name']}") do
+        if info['create_status'] == 'creating'
+          Timeout::timeout(options[:timeout].to_i) do
+            loop do
+              break if api.get_app(info['name']).body['create_status'] == 'complete'
+              sleep 1
+            end
+          end
+        end
+        if info['region']
+          status("region is #{info['region']}")
+        else
+          status("stack is #{info['stack']}")
+        end
+      end
+      
+      (addons || "").split(",").each do |addon|
+        addon.strip!
+        action("Adding #{addon} to #{info["name"]}") do
+          api.post_addon(info["name"], addon)
+        end
+      end
+
+      api.put_config_vars(info["name"], "BUILDPACK_URL" => "http://github.com/heathprovost/openbd-heroku.git")
+      api.put_config_vars(info["name"], "OPENBD_PASSWORD" => password)
+      hputs([ info["web_url"], info["git_url"] ].join(" | "))
+    
+    rescue Timeout::Error
+    
+      hputs("Timed Out! Run `heroku status` to check for known platform issues.")
+    
     end
-    opts = opts + "--addons #{addons}" unless addons.nil?
-    system "heroku apps:create #{name} #{opts} --stack cedar --buildpack http://github.com/heathprovost/openbd-heroku.git"
-    system "heroku config:set OPENBD_PASSWORD=#{password} --app #{name}"
-    system "heroku labs:enable user-env-compile --app #{name}"
+
+    unless no_remote
+      create_git_remote(remote, info["git_url"])
+    end
+
+    feature = api.get_features.body.detect { |f| f["name"] == "user-env-compile" }
+    throw "Heroku labs feature \"user-env-compile\" is not available" unless feature
+    api.post_feature("user-env-compile", name)
+
   end
 
   # openbd:update
