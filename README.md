@@ -3,11 +3,12 @@ Open Bluedragon for Heroku
 
 This is a Heroku [plugin](https://devcenter.heroku.com/articles/using-cli-plugins)/[buildpack](http://devcenter.heroku.com/articles/buildpack) for [Open Bluedragon](http://openbd.org/). It uses [Winstone](http://winstone.sourceforge.net/) to run your app.
 
-Prerequisites
+Requirements
 -----
 
 * [Java JVM](http://www.java.com/en/download/index.jsp)
 * [Heroku Toolbelt](https://toolbelt.heroku.com/)
+* Windows, Linux, or OSX. If Heroku Toolbelt works so should this plugin
 
 Overview
 -----
@@ -19,7 +20,7 @@ can go from nothing to running on heroku in less than 5 minutes - really.
 Quick Start
 -----
 
-Assuming you already have all the prerequisites covered...
+Assuming you already have all the requirements covered...
 
 1. Install the plugin and read the basic help
 		
@@ -81,8 +82,31 @@ you do not have to expose your password in revision control.
 Buildpack
 -----
 
-The buildpack will download and provision OpenBD engines as needed. It will keep a copy of the last engine version cached at all times, allowing subsequent deployments to skip
-download the engine. An average cached deployment only takes about 10 seconds or so.
+This plugin is designed to use its own custom buildpack for deploying OpenBD. When you perform a deployment
+(i.e. git push heroku master), the buildpack will run on your dyno and download and provision OpenBD as needed. It keeps a cached copy of the last engine used to so that it can skip downloading to speed up future deployments. An average cached deployment only takes about 10 seconds or so.
+
+Support FAQ
+-------
+
+Q: On Windows, everytime I use CTRL-C to stop my local server it says "Terminate batch job (Y/N)?". Is there a way to stop this from happening?
+
+A: For the long answer see [this](http://stackoverflow.com/questions/1234571/how-can-i-suppress-the-terminate-batch-job-in-cmd-exe). Short answer is to just hit CTRL-C twice.
+
+Q: On Windows, if I try to do "foreman start" on a project I created with a different user account it fails. What gives?
+
+A. Foreman occasionally has issues on Windows reading environment variables and expanding them in your Procfile. To work around this, the plugin sets $HOME inside of the .env file in your project to whatever the value was for the user who ran it originally. Just edit .env and set HOME to your current accounts home directory and you should be good to go.
+
+Q: I don't want all this fancy stuff. I want OpenBD to work exactly like I'm used to. Can I do that?
+
+A: No problem. When you issue your openbd:generate command, just add --full-engine as an option. This will give you a completely vanilla installation, jars in /WEB-INF/lib, all the extra stuff like the manual, etc. You will not be able to use openbd:update to switch versions - you'll have to manage all upgrades yourself. Also, when you do deployments the buildpack will use your files directly - it will not try to download and provision OpenBD for you.
+
+Q: I have an existing OpenBD project using ReadyToRun or OpenBD Desktop. Can I deploy it as is?
+
+A: Generally yes. All you should have to do is put your context root into git and skip straight to openbd:create. The only catch is instead of Jetty the buildpack uses Winstone to run your project on Heroku (primarily to save slug space since Winstone is so much smaller). You may find that you have issues getting things to work. A quick way to fix it is to copy the [web.xml](https://github.com/heathprovost/openbd-heroku/blob/master/opt/patches/WEB-INF/web.xml) file from this repo. It is already modified to work well with Winstone.
+
+Q: It doesn't work! What do I do?
+
+A: [Post and issue](https://github.com/heathprovost/openbd-heroku/issues). I'll do what I can to help.
 
 
 License
