@@ -23,7 +23,6 @@ cd ${BUILD_DIR}
 mkdir -p .webroot
 cp -r * .webroot
 mv .webroot webroot
-cd ${CACHE_DIR}
 
 #figure out version used if a thin deployment
 if [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-nightly.txt ]]; then
