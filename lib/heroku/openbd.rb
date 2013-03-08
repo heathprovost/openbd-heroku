@@ -276,7 +276,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       end
       redisplay "-----> Using OpenBD #{version}... extracting" 
       Dir.chdir(filepath)
-      system "jar xf openbd.war"
+      unzip(savefile, filepath)
       File.delete(savefile)
       Dir.chdir(CURR_DIR)
       redisplay "-----> Using OpenBD #{version}... done\n" 
@@ -333,6 +333,16 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       name = "#{prefix}-#{suffix}"
     end
     return name
+  end
+
+  def unzip(file, destination)
+    Zip::ZipFile.open(file) { |zip_file|
+      zip_file.each { |f|
+        f_path = File.join(destination, f.name)
+        FileUtils.mkdir_p(File.dirname(f_path))
+        zip_file.extract(f, f_path) unless File.exist?(f_path)
+      }
+    }
   end
 
 end
