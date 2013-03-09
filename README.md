@@ -88,6 +88,10 @@ This plugin is designed to use its own custom buildpack for deploying OpenBD. Wh
 Support FAQ
 -------
 
+**How do I make sure I am running the latest version of the plugin?**
+
+		$ heroku plugins:update openbd-heroku
+
 **On Windows, everytime I use CTRL-C to stop my local server it says "Terminate batch job (Y/N)?". Is there a way to stop this from happening?**
 
 For the long answer see [this](http://stackoverflow.com/questions/1234571/how-can-i-suppress-the-terminate-batch-job-in-cmd-exe). Short answer is to just hit CTRL-C twice.
