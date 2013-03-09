@@ -92,7 +92,7 @@ Support FAQ
 
 For the long answer see [this](http://stackoverflow.com/questions/1234571/how-can-i-suppress-the-terminate-batch-job-in-cmd-exe). Short answer is to just hit CTRL-C twice.
 
-**On Windows, if I try to do "foreman start" on a project I created with a different user account it fails. What gives?**
+**If I try to do "foreman start" on a project I created with a different user account it fails. What gives?**
 
 Foreman occasionally has issues on Windows reading environment variables and expanding them in your Procfile. To work around this, the plugin sets $HOME inside of the .env file in your project to whatever the value was for the user who ran it originally. Just edit .env and set HOME to your current accounts home directory and you should be good to go.
 
