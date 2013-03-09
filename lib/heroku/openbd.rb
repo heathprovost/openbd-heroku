@@ -22,7 +22,30 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   # -o, --overwrite               # recreate project, deleting ALL existing files
   # -f, --full-engine             # use complete engine and disable thin deployment
   #     --verbose                 # show detailed output
-  #  
+  #
+  #Examples
+  #
+  # $ heroku openbd:generate
+  # -----> Using OpenBD 3.0... done
+  # -----> Project 'openbd-project-1' created successfully.
+  # Type 'cd openbd-project-1' to change to your project folder.
+  # Type 'foreman start' to run the server locally  
+  #
+  # $ heroku openbd:generate foo --version 1.1 --verbose
+  # -----> Using OpenBD 1.1... done
+  # -----> Copying /bluedragon... done
+  # -----> Copying /WEB-INF/webresources... done
+  # -----> Initializing /WEB-INF/classes... done
+  # -----> Initializing /WEB-INF/customtags... done
+  # -----> Patching /index.cfm... done
+  # -----> Patching /WEB-INF/bluedragon/log4j.properties... done
+  # -----> Patching /WEB-INF/web.xml... done
+  # -----> Patching /WEB-INF/bluedragon/bluedragon.xml... done
+  # -----> Patching /WEB-INF/bluedragon/component.cfc... done
+  # -----> Project 'foo' created successfully.
+  # Type 'cd foo' to change to your project folder.
+  # Type 'foreman start' to run the server locally
+  #
   def generate
     $VERBOSE = !options[:verbose].nil?
     name = shift_argument || generate_app_name
@@ -64,20 +87,22 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   # -r, --remote REMOTE        # the git remote to create, default "heroku"
   # -p, --password PASSWORD    # admin console password, default auto generated
   #
-  #This command acts as an alias for 'heroku apps:create', supplying some 
-  #hardcoded options, setting config variables and options. Internally it does the
-  #following: 
+  #Example
+  #
+  # $ heroku openbd:create my-openbd-app
+  # Creating my-openbd-app... done, stack is cedar
+  # http://my-openbd-app.herokuapp.com/ | git@heroku.com:my-openbd-app.git
+  # Git remote heroku added
+  #
+  #NOTE: This is a replacement for 'heroku apps:create'. Internally it does this: 
   #
   # $ heroku create [NAME] 
   #  --stack cedar 
   #  --buildpack http://github.com/heathprovost/openbd-heroku.git
   #
-  # $ heroku config:set
-  #  OPENBD_PASSWORD=[PASSWORD]
-  #  --app [NAME]
+  # $ heroku config:set OPENBD_PASSWORD=[PASSWORD] --app [NAME]
   #
-  # $ heroku labs:enable user-env-compile
-  #  --app [NAME]
+  # $ heroku labs:enable user-env-compile --app [NAME]
   #
   def create
     name = shift_argument || options[:app] || ENV['HEROKU_APP']
@@ -138,13 +163,32 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
 
   # openbd:update
   #
-  # updates version of openbd in current project
+  # updates version of openbd in current project folder
   #
   # -v, --version VERSION         # openbd version. Default to use current version
-  # -r, --rebuild                 # flush cache and download new openbd engine
+  # -r, --rebuild                 # flush cache and download new copy of openbd engine
   # -o, --overwrite-config        # overwrite configuration files and use default settings
   #     --verbose                 # show detailed output
   #  
+  #Examples
+  #
+  # $ heroku openbd:update -v 1.2
+  # -----> Using OpenBD 1.2... done
+  # foo updated to OpenBD 1.2
+  #
+  # $ heroku openbd:update -v 1.2 --verbose
+  # -----> Using OpenBD 1.2... done
+  # -----> Copying /bluedragon... done
+  # -----> Copying /WEB-INF/webresources... done
+  # -----> Using existing /WEB-INF/classes... done
+  # -----> Using existing /WEB-INF/customtags... done
+  # -----> Using existing /index.cfm... done
+  # -----> Using existing /WEB-INF/bluedragon/log4j.properties... done
+  # -----> Using existing /WEB-INF/web.xml... done
+  # -----> Using existing /WEB-INF/bluedragon/bluedragon.xml... done
+  # -----> Using existing /WEB-INF/bluedragon/component.cfc... done
+  # foo updated to OpenBD 1.2
+  #
   def update
     is_valid_project
     $VERBOSE = !options[:verbose].nil?
