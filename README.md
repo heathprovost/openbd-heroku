@@ -106,7 +106,7 @@ Generally yes. All you should have to do is put your context root into git and s
 
 **It doesn't work! What do I do?**
 
-[Post and issue](https://github.com/heathprovost/openbd-heroku/issues). I'll do what I can to help.
+[Post an issue](https://github.com/heathprovost/openbd-heroku/issues). I'll do what I can to help.
 
 
 License
