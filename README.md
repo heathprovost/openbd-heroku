@@ -29,9 +29,7 @@ Assuming you already have all the requirements covered...
 		
 		$ heroku openbd:generate your-app-name
 		$ cd your-app-name
-		$ foreman start
-
-		goto http://localhost:8080/ to see your site
+		$ foreman start	     (goto http://localhost:8080/ to see your site)
 
 3. Create, deploy, and view on Heroku
 
