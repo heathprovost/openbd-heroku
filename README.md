@@ -112,4 +112,4 @@ Generally yes. All you should have to do is put your context root into git and s
 License
 -------
 
-Licensed under the MIT License. See LICENSE file.
+Licensed under the MIT License. See [LICENSE file](https://github.com/heathprovost/openbd-heroku/blob/master/LICENSE.txt).
