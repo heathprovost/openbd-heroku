@@ -88,7 +88,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
     no_git = !options[:no_git].nil?
     download_openbd(version, rebuild)
     update_project(name, version, full_engine, false, false)
-    put_into_git(name) unless no_git
+    put_into_git(name) unless no_git or ENV['OPENBD_HEROKU_NO_GIT']
     display "-----> Project '#{name}' created successfully.\nType 'cd #{name}' to change to your project folder.\nType 'foreman start' to run the server locally"
   end
 
