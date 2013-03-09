@@ -18,6 +18,9 @@ LOGGER_FLAGS=""
 OPENBD_VERSION="unknown"
 KEEP_CACHE="false"
 
+#make sure JAVA_OPTS is set
+export JAVA_OPTS=${JAVA_OPTS:="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF-8"}
+
 #move everything into webroot folder
 cd ${BUILD_DIR}
 mkdir -p .webroot
