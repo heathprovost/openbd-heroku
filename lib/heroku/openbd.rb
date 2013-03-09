@@ -12,6 +12,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   HOME_PATH = File.expand_path("~") + "/.openbd-heroku"
   BUFFER_SIZE = 1_024*1_024*1
   CURR_DIR = Dir.pwd
+  PLUGIN_VERSION = "1.0.3"
 
   # openbd:generate [NAME]
   #
@@ -218,7 +219,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
 
     feature = api.get_features.body.detect { |f| f["name"] == "user-env-compile" }
     throw "Heroku labs feature \"user-env-compile\" is not available" unless feature
-    api.post_feature("user-env-compile", name)
+    api.post_feature("user-env-compile", info['name'])
 
   end
 
@@ -266,6 +267,81 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
     download_openbd(version, rebuild) unless version.nil?
     update_project(name, version, false, overwrite_config, true)    
     display "#{name} updated to OpenBD #{version}" unless version.nil?
+  end
+
+  # openbd:info
+  #
+  # display plugin and project information
+  #
+  #Example
+  #
+  # $ heroku openbd:info
+  # --------------------------------------------------
+  #  openbd-heroku v1.0.3
+  # --------------------------------------------------
+  #
+  #  Current Project
+  # 
+  #  local name:       openbd-project
+  #  heroku app:       (not created)
+  #  last commit:      Sat, 9 Mar 2013 02:24:49 -0600
+  #  deployment mode:  Thin (OpenBD v3.0)
+  #
+  #  Available OpenBD versions:
+  # 
+  #  1.1:              cached 2013-03-07
+  #  1.2:              cached 2013-03-08
+  #  1.3:              available
+  #  1.4:              available
+  #  2.0:              available
+  #  2.0.1:            cached 2013-03-07
+  #  2.0.2:            available
+  #  3.0:              cached 2013-03-07
+  #  nightly:          cached 2013-03-07
+  #
+  def info
+    display "--------------------------------------------------"
+    display " openbd-heroku v#{PLUGIN_VERSION}"
+    display "--------------------------------------------------"
+    if File.exists? "Procfile" and File.exists? "WEB-INF/web.xml" and File.exists? "WEB-INF/bluedragon/bluedragon.xml"
+      display " "
+      display " Current Project"
+      display " "
+      printf " %-17s %s\n", "local name:", File.basename(CURR_DIR)
+      begin
+        heroku_app = app
+      rescue
+      end
+      if heroku_app
+        printf " %-17s %s\n", "heroku app:", heroku_app 
+      else
+        printf " %-17s %s\n", "heroku app:", "(not created)"
+      end
+      if File.directory? ".git"
+        output = `git log --all --format=format:'%aD' --abbrev-commit --date=relative -1`
+        printf " %-17s %s\n", "last commit:", output
+      else
+        printf " %-17s %s\n", "last commit:", "(not in git)"
+      end
+      file = Dir.glob("WEB-INF/lib/openbd-heroku-readme-*.txt")
+      if !file.empty?
+        printf " %-17s %s\n", "deployment mode:", "Thin (OpenBD v#{File.basename(file[0], ".*").split("-").last})"
+      else
+        printf " %-17s %s\n", "deployment mode:", "Full Engine"
+      end
+    end
+    display " "
+    display " Available OpenBD versions:"
+    display " "
+    OK_OBD_VERSIONS.sort.each { |x|
+      if File.directory? "#{HOME_PATH}/cache/#{x}"
+        y = "cached #{File.stat(HOME_PATH + "/cache/" + x).ctime.strftime("%Y-%m-%d")}"
+      else
+        y = "available"
+      end
+      printf " %-17s %s\n", x + ":", y
+    }
+    display " "
   end
 
   private

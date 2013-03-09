@@ -42,7 +42,7 @@ Assuming you already have all the requirements covered...
 Under The Hood
 -----
 
-The plugin manages as much as it can for you, requiring minimal input. It currently supports four commands:
+The plugin manages as much as it can for you, requiring minimal input. It currently supports the following commands:
 
 ### openbd:generate
 
@@ -72,6 +72,10 @@ Note: Make sure to commit your changes to git after running this command.
 **aliases:** _openbd:create_
 
 This command creates your application on Heroku. It works and acts more or less like the standard "heroku create" command, but it takes care of a bunch of boilerplate for you. It knows which buildpack to assign and takes care of doing that part for you. You can also set a password for the admin console (or let the plugin generate a strong password for you). This password will be used when your app is deployed on Heroku, so you do not have to expose your password in revision control.
+
+### openbd:info
+
+Displays information about the plugin and your current project (when run inside your project folder). This will display quite a bit of usefule information - the name of your heroku app, the date and time of your last commit, and the deployment model and version of OpenBD used. It will also list all of the versions of OpenBD that are available for use.
 
 Buildpack
 -----
