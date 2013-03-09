@@ -98,7 +98,7 @@ For the long answer see [this](http://stackoverflow.com/questions/1234571/how-ca
 
 **If I try to do "foreman start" on a project I created with a different user account it fails. What gives?**
 
-Foreman occasionally has issues on Windows reading environment variables and expanding them in your Procfile. To work around this, the plugin sets $HOME inside of the .env file in your project to whatever the value was for the user who ran it originally. Just edit .env and set HOME to your current accounts home directory and you should be good to go.
+Foreman occasionally has issues on Windows reading environment variables and expanding them in your Procfile. To work around this, the plugin sets $HOME inside of your-project/.env to whatever the value was for the user who ran it originally. Just edit .env and set HOME to your current account's home directory and you should be good to go.
 
 **I don't want all this fancy stuff. I want OpenBD to work exactly like I'm used to. Can I do that?**
 
