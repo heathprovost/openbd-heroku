@@ -35,7 +35,7 @@ Assuming you already have all the requirements covered...
 
 3. Create, deploy, and view on Heroku
 
-		$ heroku openbd:create your-app-name
+		$ heroku openbd:heroku your-app-name
 		$ git push heroku master
 		$ heroku open		 
 
