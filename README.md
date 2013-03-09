@@ -77,7 +77,7 @@ Support FAQ
 
 		$ heroku plugins:update openbd-heroku
 
-**On Windows, everytime I use CTRL-C to stop my local server it says "Terminate batch job (Y/N)?". Is there a way to stop this from happening?**
+**On Windows, everytime I use CTRL-C to stop my local server it says "Terminate batch job (Y/N)?". Is there a way to stop this?**
 
 For the long answer see [this](http://stackoverflow.com/questions/1234571/how-can-i-suppress-the-terminate-batch-job-in-cmd-exe). Short answer is to just hit CTRL-C twice.
 
@@ -91,11 +91,19 @@ Put them in /WEB-INF/lib just as you normally would. Your customizations will be
 
 **I don't want all this fancy stuff. I want OpenBD to work exactly like I'm used to. Can I do that?**
 
-No problem. When you issue your openbd:generate command, just add --full-engine as an option. This will give you a completely vanilla installation, jars in /WEB-INF/lib, all the extra stuff like the manual, etc. You will not be able to use openbd:update to switch versions - you'll have to manage all upgrades yourself. Also, when you do deployments the buildpack will use your files directly - it will not try to download and provision OpenBD for you.
+No problem. When you issue your openbd:generate command, just add --full-engine as an option. This will give you a completely vanilla installation, jars in /WEB-INF/lib, all the extra stuff like the manual, etc. You will not be able to use openbd:update to switch versions though - you'll have to manage upgrades yourself. Also, when you do deployments the buildpack will use your files as is - it will not try to download and provision OpenBD for you. You can use the generated Procfile to run your app, or if you prefer you can use [OpenBD Desktop](http://openbd.org/downloads/) to run it using it's built in copy of Jetty.
 
 **I have an existing OpenBD project using ReadyToRun or OpenBD Desktop. Can I deploy it as is?**
 
 Generally yes. All you should have to do is put your context root into git and skip straight to openbd:create. The only catch is instead of Jetty the buildpack uses Winstone to run your project on Heroku (primarily to save slug space since Winstone is so much smaller). You may find that you have issues getting things to work. A quick way to fix it is to copy the [web.xml](https://github.com/heathprovost/openbd-heroku/blob/master/opt/patches/WEB-INF/web.xml) file from this repo. It is already modified to work well with Winstone.
+
+**I don't want to use the plugin at all. How do I use this buildpack directly?**
+
+		$ heroku create your-app-name --stack cedar --buildpack http://github.com/heathprovost/openbd-heroku.git
+		$ heroku config:set OPENBD_PASSWORD=[password] --app your-app-name
+		$ heroku labs:enable user-env-compile --app your-app-name
+
+This last bit is necessary because the buildpack needs to read your heroku config variables.
 
 **It doesn't work! What do I do?**
 
