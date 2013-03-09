@@ -25,11 +25,11 @@ Assuming you already have all the requirements covered...
 		$ heroku plugins:install http://github.com/heathprovost/openbd-heroku.git
 		$ heroku help openbd
 
-2. Generate a new project and run it locally
+2. Generate a new project and run it locally (browse to http://localhost:8080/ to see your site)
 		
 		$ heroku openbd:generate your-app-name
 		$ cd your-app-name
-		$ foreman start	     (goto http://localhost:8080/ to see your site)
+		$ foreman start
 
 3. Create, deploy, and view on Heroku
 
