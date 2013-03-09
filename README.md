@@ -46,6 +46,8 @@ The plugin manages as much as it can for you, requiring minimal input. It curren
 
 ### openbd:generate
 
+**aliases:** _openbd:gen_, _openbd:new_
+
 This command does just what it says - it generates a new project. It will provision the engine as needed - downloading it from openbd.org if neccessary. By default, it operates in "thin deployment" mode, i.e. it dynamically links your project with an extenerally stored version of the openbd engine. This keeps the heaviest parts of OpenBD out of your local project folder, making for quick deployments and a lightweight repo. You can also do full engine deployments if you prefer, the choice is yours. 
 
 It will also, by default, initialize git in the created project folder and perform an initial commit. If you
@@ -55,6 +57,8 @@ Another alternative is to set an environment variable called OPENBD_HEROKU_NO_GI
 
 ### openbd:generate_no_git
 
+**aliases:** _openbd:no_git_
+
 Exactly the same as openbd:generate, just skips the git initialization and commit. This mostly serves as a safe alias for developers who would rather not have the plugin muck about with git commands. 
 
 ### openbd:update
@@ -63,7 +67,9 @@ Ever wished you could update OpenBD with a single command? Then this is for you.
 
 Note: Make sure to commit your changes to git after running this command.
 
-### openbd:create
+### openbd:heroku
+
+**aliases:** _openbd:create_
 
 This command creates your application on Heroku. It works and acts more or less like the standard "heroku create" command, but it takes care of a bunch of boilerplate for you. It knows which buildpack to assign and takes care of doing that part for you. You can also set a password for the admin console (or let the plugin generate a strong password for you). This password will be used when your app is deployed on Heroku, so you do not have to expose your password in revision control.
 

@@ -92,6 +92,9 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
     display "-----> Project '#{name}' created successfully.\nType 'cd #{name}' to change to your project folder.\nType 'foreman start' to run the server locally"
   end
 
+  alias_command "openbd:gen", "openbd:generate"
+  alias_command "openbd:new", "openbd:generate"
+
   # openbd:generate_no_git [NAME]
   #
   # alias for "openbd:generate --no-git"
@@ -134,7 +137,9 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
     run_command("openbd:generate", args)
   end
 
-  # openbd:create [NAME]
+  alias_command "openbd:no_git", "openbd:generate_no_git"
+
+  # openbd:heroku [NAME]
   #
   # create a new openbd app on heroku
   #
@@ -145,7 +150,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   #
   #Example
   #
-  # $ heroku openbd:create my-openbd-app
+  # $ heroku openbd:heroku my-openbd-app
   # Creating my-openbd-app... done, stack is cedar
   # http://my-openbd-app.herokuapp.com/ | git@heroku.com:my-openbd-app.git
   # Git remote heroku added
@@ -160,7 +165,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   #
   # $ heroku labs:enable user-env-compile --app [NAME]
   #
-  def create
+  def heroku
     name = shift_argument || options[:app] || ENV['HEROKU_APP']
     validate_arguments!
     no_remote = !options[:no_remote].nil?
@@ -216,6 +221,8 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
     api.post_feature("user-env-compile", name)
 
   end
+
+  alias_command "openbd:create", "openbd:heroku"
 
   # openbd:update
   #
