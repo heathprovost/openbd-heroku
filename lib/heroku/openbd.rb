@@ -20,13 +20,15 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   # -v, --version VERSION         # openbd version. Default is last stable release
   # -r, --rebuild                 # flush cache and download new openbd engine
   # -o, --overwrite               # recreate project, deleting ALL existing files
-  # -f, --full-engine             # use complete engine and disable thin deployment
+  # -f, --full-engine             # use complete engine, disabling thin deployment
+  # -n, --no-git                  # skip git inititialize and commit
   #     --verbose                 # show detailed output
   #
   #Examples
   #
   # $ heroku openbd:generate
   # -----> Using OpenBD 3.0... done
+  # -----> Initializing git repo and performing 1st commit... done
   # -----> Project 'openbd-project-1' created successfully.
   # Type 'cd openbd-project-1' to change to your project folder.
   # Type 'foreman start' to run the server locally  
@@ -42,6 +44,16 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   # -----> Patching /WEB-INF/web.xml... done
   # -----> Patching /WEB-INF/bluedragon/bluedragon.xml... done
   # -----> Patching /WEB-INF/bluedragon/component.cfc... done
+  # Initialized empty Git repository in /openbd/foo/.git/
+  # [master (root-commit) 58d6e30] 1st commit
+  # 7 files changed, 255 insertions(+), 0 deletions(-)
+  # create mode 100644 .gitignore
+  # create mode 100644 WEB-INF/bluedragon/bluedragon.xml
+  # create mode 100644 WEB-INF/bluedragon/component.cfc
+  # create mode 100644 WEB-INF/bluedragon/log4j.properties
+  # create mode 100644 WEB-INF/lib/openbd-heroku-readme-1.1.txt
+  # create mode 100644 WEB-INF/web.xml
+  # create mode 100644 index.cfm
   # -----> Project 'foo' created successfully.
   # Type 'cd foo' to change to your project folder.
   # Type 'foreman start' to run the server locally
@@ -73,9 +85,53 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
     end
     rebuild = !options[:rebuild].nil?
     full_engine = !options[:full_engine].nil?
+    no_git = !options[:no_git].nil?
     download_openbd(version, rebuild)
     update_project(name, version, full_engine, false, false)
+    put_into_git(name) unless no_git
     display "-----> Project '#{name}' created successfully.\nType 'cd #{name}' to change to your project folder.\nType 'foreman start' to run the server locally"
+  end
+
+  # openbd:generate_no_git [NAME]
+  #
+  # alias for "openbd:generate --no-git"
+  #
+  # generate a new openbd project and put it into revision control
+  #
+  # -v, --version VERSION         # openbd version. Default is last stable release
+  # -r, --rebuild                 # flush cache and download new openbd engine
+  # -o, --overwrite               # recreate project, deleting ALL existing files
+  # -f, --full-engine             # use complete engine, disabling thin deployment
+  #     --verbose                 # show detailed output
+  #
+  #Examples
+  #
+  # $ heroku openbd:generate_no_git
+  # -----> Using OpenBD 3.0... done
+  # -----> Project 'openbd-project-1' created successfully.
+  # Type 'cd openbd-project-1' to change to your project folder.
+  # Type 'foreman start' to run the server locally  
+  #
+  # $ heroku openbd:generate_no_git foo --version 1.1 --verbose
+  # -----> Using OpenBD 1.1... done
+  # -----> Copying /bluedragon... done
+  # -----> Copying /WEB-INF/webresources... done
+  # -----> Initializing /WEB-INF/classes... done
+  # -----> Initializing /WEB-INF/customtags... done
+  # -----> Patching /index.cfm... done
+  # -----> Patching /WEB-INF/bluedragon/log4j.properties... done
+  # -----> Patching /WEB-INF/web.xml... done
+  # -----> Patching /WEB-INF/bluedragon/bluedragon.xml... done
+  # -----> Patching /WEB-INF/bluedragon/component.cfc... done
+  # -----> Project 'foo' created successfully.
+  # Type 'cd foo' to change to your project folder.
+  # Type 'foreman start' to run the server locally
+  #
+  def generate_no_git
+    args = ARGV.dup
+    args.shift
+    args << "--no-git"
+    run_command("openbd:generate", args)
   end
 
   # openbd:create [NAME]
@@ -94,7 +150,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   # http://my-openbd-app.herokuapp.com/ | git@heroku.com:my-openbd-app.git
   # Git remote heroku added
   #
-  #NOTE: This is a replacement for 'heroku apps:create'. Internally it does this: 
+  #NOTE: This is a replacement for 'heroku create'. Internally it does this: 
   #
   # $ heroku create [NAME] 
   #  --stack cedar 
@@ -163,11 +219,11 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
 
   # openbd:update
   #
-  # updates version of openbd in current project folder
+  # updates current project
   #
   # -v, --version VERSION         # openbd version. Default to use current version
-  # -r, --rebuild                 # flush cache and download new copy of openbd engine
-  # -o, --overwrite-config        # overwrite configuration files and use default settings
+  # -r, --rebuild                 # flush cache and download new copy of openbd
+  # -o, --overwrite-config        # reset configuration files to defaults
   #     --verbose                 # show detailed output
   #  
   #Examples
@@ -207,6 +263,28 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
 
   private
 
+  def put_into_git(name)
+    if !has_git?
+      throw "Can't initialize repo. Git does not appear to be installed."
+    elsif File.directory?("#{CURR_DIR}/#{name}/.git")
+      "-----> INFO: existing git repo found [--git-init ignored]..."
+    else
+      Dir.chdir(name)
+      if $VERBOSE
+        system "git init"
+        system "git add ."
+        system "git commit -m \"1st commit\""
+      else
+        redisplay "-----> Initializing git repo and performing 1st commit..."
+        `git init`
+        `git add .`
+        `git commit -m \"1st commit\"`
+        redisplay "-----> Initializing git repo and performing 1st commit... done\n"
+      end
+      Dir.chdir(CURR_DIR)
+    end
+  end
+
   def update_project(name, version, full_engine, overwrite_config, is_update)
     if is_update
       project_dir = CURR_DIR
@@ -226,7 +304,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       files = Dir.glob("#{project_dir}/WEB-INF/customtags/*")
       FileUtils.rm_r files
       write_file "#{project_dir}/.gitignore", "/Procfile\n/.env\n/WEB-INF/bluedragon/work/\n/WEB-INF/bluedragon/bluedragon.xml.bak.*\n"
-      write_file "#{project_dir}/.env", "HOME=#{ENV["HOME"]}\nPORT=8080\nJAVA_OPTS=-Xmx128m -Xss512k" 
+      write_file "#{project_dir}/.env", "HOME=#{home_directory}\nPORT=8080\nJAVA_OPTS=-Xmx128m -Xss512k" 
       write_file "#{project_dir}/Procfile", "web: java $JAVA_OPTS -Dlog4j.configuration=file:WEB-INF/bluedragon/log4j.properties -jar $HOME/.heroku/plugins/openbd-heroku/opt/server-engines/winstone-lite-0.9.10.jar --webroot=. --httpPort=$PORT"
     else
       #Copy required directories
@@ -277,7 +355,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       FileUtils.mkdir_p File.dirname("#{project_dir}/WEB-INF/lib/openbd-heroku-readme-#{version}.txt")
       FileUtils.cp "#{PLUGIN_PATH}/opt/patches/WEB-INF/lib/openbd-heroku-readme.txt", "#{project_dir}/WEB-INF/lib/openbd-heroku-readme-#{version}.txt"
       write_file "#{project_dir}/.gitignore", "/Procfile\n/.env\n/bluedragon/\n/WEB-INF/bluedragon/work/\n/WEB-INF/webresources/\n/WEB-INF/bluedragon/bluedragon.xml.bak.*\n"
-      write_file "#{project_dir}/.env", "HOME=#{ENV["HOME"]}\nPORT=8080\nJAVA_OPTS=-Xmx128m -Xss512k" 
+      write_file "#{project_dir}/.env", "HOME=#{home_directory}\nPORT=8080\nJAVA_OPTS=-Xmx128m -Xss512k" 
       write_file "#{project_dir}/Procfile", "web: java $JAVA_OPTS -Dlog4j.configuration=file:WEB-INF/bluedragon/log4j.properties -jar $HOME/.heroku/plugins/openbd-heroku/opt/server-engines/winstone-lite-0.9.10.jar --commonLibFolder=$HOME/.openbd-heroku/cache/#{version}/WEB-INF/lib --webroot=. --httpPort=$PORT"
     end
     #Copy patched files
@@ -356,10 +434,8 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
         end
       end
       redisplay "-----> Using OpenBD #{version}... extracting" 
-      Dir.chdir(filepath)
       unzip(savefile, filepath)
       File.delete(savefile)
-      Dir.chdir(CURR_DIR)
       redisplay "-----> Using OpenBD #{version}... done\n" 
     end
   end

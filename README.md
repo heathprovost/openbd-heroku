@@ -33,13 +33,7 @@ Assuming you already have all the requirements covered...
 
 		goto http://localhost:8080/ to see your site
 
-3. Put it in git
-
-		$ git init
-		$ git add .
-		$ git commit -m "1st commit"
-
-4. Create, deploy, and view on Heroku
+3. Create, deploy, and view on Heroku
 
 		$ heroku openbd:create your-app-name
 		$ git push heroku master
@@ -48,11 +42,19 @@ Assuming you already have all the requirements covered...
 Under The Hood
 -----
 
-The plugin manages as much as it can for you, requiring minimal input. It currently supports three commands:
+The plugin manages as much as it can for you, requiring minimal input. It currently supports four commands:
 
 ### openbd:generate
 
-This command does just what it says - it generates a new project. It will provision the engine as needed - downloading it from openbd.org if neccessary. By default, it operates in "thin deployment" mode, i.e. it dynamically links your project with an extenerally stored version of the openbd engine. This keeps the heaviest parts of OpenBD out of your local project folder, making for quick deployments and a lightweight repo. You can also do full engine deployments if you prefer, the choice is yours.
+This command does just what it says - it generates a new project. It will provision the engine as needed - downloading it from openbd.org if neccessary. By default, it operates in "thin deployment" mode, i.e. it dynamically links your project with an extenerally stored version of the openbd engine. This keeps the heaviest parts of OpenBD out of your local project folder, making for quick deployments and a lightweight repo. You can also do full engine deployments if you prefer, the choice is yours. 
+
+It will also, by default, initialize git in the created project folder and perform an initial commit. If you
+prefer to do that yourself, just add the --no-git option or use the openbd:generate_no_git command instead.
+
+### openbd:generate_no_git
+
+Exactly the same as openbd:generate, just skips the git initialization and commit. If you prefer to do all the
+git stuff yourself use this command instead.
 
 ### openbd:update
 
