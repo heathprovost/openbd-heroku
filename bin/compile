@@ -18,9 +18,6 @@ LOGGER_FLAGS=""
 OPENBD_VERSION="unknown"
 KEEP_CACHE="false"
 
-#make sure JAVA_OPTS is set
-export JAVA_OPTS=${JAVA_OPTS:="-Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF-8"}
-
 #move everything into webroot folder
 cd ${BUILD_DIR}
 mkdir -p .webroot
@@ -147,7 +144,7 @@ if [ -f ${BUILD_DIR}/webroot/Procfile ]; then
   rm -rf ${BUILD_DIR}/webroot/Procfile
 fi
 echo -n "-----> Generating Procfile..."
-echo -e "web: java \$JAVA_OPTS -Dlog4j.configuration=file:webroot/WEB-INF/bluedragon/log4j.properties -jar ${SERVLET_ENGINE} --webroot=./webroot --httpPort=\$PORT" >> ${BUILD_DIR}/Procfile
+echo -e "web: java -Xmx384m -Xss512k -XX:+UseCompressedOops -Dfile.encoding=UTF-8 -Dlog4j.configuration=file:webroot/WEB-INF/bluedragon/log4j.properties -jar ${SERVLET_ENGINE} --webroot=./webroot --httpPort=\$PORT" >> ${BUILD_DIR}/Procfile
 echo " done"
 
 #fixup bluedragon.xml
