@@ -22,26 +22,20 @@ Assuming you already have all the requirements covered...
 
 1. Install the plugin and read the basic help
 		
-```term
-$ heroku plugins:install http://github.com/heathprovost/openbd-heroku.git
-$ heroku help openbd
-```
+		$ heroku plugins:install http://github.com/heathprovost/openbd-heroku.git
+		$ heroku help openbd
 
 2. Generate a new project and run it locally (browse to http://localhost:8080/ to see your site)
 		
-```term
-$ heroku openbd:generate your-app-name
-$ cd your-app-name
-$ foreman start
-```
+		$ heroku openbd:generate your-app-name
+		$ cd your-app-name
+		$ foreman start
 
 3. Create, deploy, and view on Heroku
 
-```term
-$ heroku openbd:heroku your-app-name
-$ git push heroku master
-$ heroku open		 
-```
+		$ heroku openbd:heroku your-app-name
+		$ git push heroku master
+		$ heroku open		 
 
 Under The Hood
 -----
@@ -83,11 +77,9 @@ This plugin is designed to use it's own custom buildpack for deploying OpenBD. W
 
 If you prefer to do things yourself, the plugin in not strictly necessary. You can use the buildpack directly without intstalling the plugin at all:
 
-```term
-$ heroku create your-app-name --stack cedar --buildpack http://github.com/heathprovost/openbd-heroku.git
-$ heroku config:set OPENBD_PASSWORD=[password] --app your-app-name
-$ heroku labs:enable user-env-compile --app your-app-name
-```
+		$ heroku create your-app-name --stack cedar --buildpack http://github.com/heathprovost/openbd-heroku.git
+		$ heroku config:set OPENBD_PASSWORD=[password] --app your-app-name
+		$ heroku labs:enable user-env-compile --app your-app-name
 
 This last bit is necessary because the buildpack needs to read your heroku config variables. You will have to provide you own copy of OpenBD and your own way of running it locally, but otherwise this should work just like doing a full-engine deployment with the plugin. See the FAQ for more details on this.
 
