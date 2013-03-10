@@ -33,7 +33,7 @@ $ heroku help openbd
 $ heroku openbd:generate your-app-name
 $ cd your-app-name
 $ foreman start
-```term
+```
 
 3. Create, deploy, and view on Heroku
 
