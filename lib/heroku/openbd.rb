@@ -319,7 +319,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       end
       if File.directory? ".git"
         output = `git log --all --format=format:'%aD' --abbrev-commit --date=relative -1`
-        printf " %-17s %s\n", "last commit:", output
+        printf " %-17s %s\n", "last commit:", output.tr('"', '').tr("'", '')
       else
         printf " %-17s %s\n", "last commit:", "(not in git)"
       end
