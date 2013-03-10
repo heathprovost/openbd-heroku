@@ -75,6 +75,16 @@ Buildpack
 This plugin is designed to use it's own custom buildpack for deploying OpenBD. When you perform a deployment
 (i.e. git push heroku master), the buildpack will run on your dyno and download and provision OpenBD as needed. It keeps a cached copy of the last engine used to so that it can skip downloading to speed up future deployments. On average a cached deployment takes only about 10 seconds or so.
 
+If you prefer to do things yourself, the plugin in not strictly necessary. You can use the buildpack directly without intstalling the plugin at all:
+
+```term
+$ heroku create your-app-name --stack cedar --buildpack http://github.com/heathprovost/openbd-heroku.git
+$ heroku config:set OPENBD_PASSWORD=[password] --app your-app-name
+$ heroku labs:enable user-env-compile --app your-app-name
+```
+
+This last bit is necessary because the buildpack needs to read your heroku config variables. You will have to provide you own copy of OpenBD and your own way of running it locally, but otherwise this should work just like doing a full-engine deployment with the plugin. See the FAQ for more details on this.
+
 Support FAQ
 -------
 
