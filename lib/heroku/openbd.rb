@@ -96,50 +96,6 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   alias_command "openbd:gen", "openbd:generate"
   alias_command "openbd:new", "openbd:generate"
 
-  # openbd:generate_no_git [NAME]
-  #
-  # alias for "openbd:generate --no-git"
-  #
-  # generate a new openbd project and put it into revision control
-  #
-  # -v, --version VERSION         # openbd version. Default is last stable release
-  # -r, --rebuild                 # flush cache and download new openbd engine
-  # -o, --overwrite               # recreate project, deleting ALL existing files
-  # -f, --full-engine             # use complete engine, disabling thin deployment
-  #     --verbose                 # show detailed output
-  #
-  #Examples
-  #
-  # $ heroku openbd:generate_no_git
-  # -----> Using OpenBD 3.0... done
-  # -----> Project 'openbd-project-1' created successfully.
-  # Type 'cd openbd-project-1' to change to your project folder.
-  # Type 'foreman start' to run the server locally  
-  #
-  # $ heroku openbd:generate_no_git foo --version 1.1 --verbose
-  # -----> Using OpenBD 1.1... done
-  # -----> Copying /bluedragon... done
-  # -----> Copying /WEB-INF/webresources... done
-  # -----> Initializing /WEB-INF/classes... done
-  # -----> Initializing /WEB-INF/customtags... done
-  # -----> Patching /index.cfm... done
-  # -----> Patching /WEB-INF/bluedragon/log4j.properties... done
-  # -----> Patching /WEB-INF/web.xml... done
-  # -----> Patching /WEB-INF/bluedragon/bluedragon.xml... done
-  # -----> Patching /WEB-INF/bluedragon/component.cfc... done
-  # -----> Project 'foo' created successfully.
-  # Type 'cd foo' to change to your project folder.
-  # Type 'foreman start' to run the server locally
-  #
-  def generate_no_git
-    args = ARGV.dup
-    args.shift
-    args << "--no-git"
-    run_command("openbd:generate", args)
-  end
-
-  alias_command "openbd:no_git", "openbd:generate_no_git"
-
   # openbd:heroku [NAME]
   #
   # create a new openbd app on heroku

@@ -49,15 +49,9 @@ The plugin manages as much as it can for you, requiring minimal input. It curren
 This command does just what it says - it generates a new project. It will provision the engine as needed - downloading it from openbd.org if neccessary. By default, it operates in "thin deployment" mode, i.e. it dynamically links your project with an extenerally stored version of the openbd engine. This keeps the heaviest parts of OpenBD out of your local project folder, making for quick deployments and a lightweight repo. You can also do full engine deployments if you prefer, the choice is yours. 
 
 It will also, by default, initialize git in the created project folder and perform an initial commit. If you
-prefer to do that yourself, just add the --no-git option or use the openbd:generate_no_git command instead. 
+prefer to do that yourself, just add the --no-git option. 
 
-Another alternative is to set an environment variable called OPENBD_HEROKU_NO_GIT to true in your bash.rc (or whatever you use to setup your environment). It this environment variable is set generate will act as if the --no-git option is always being passed to it.
-
-### openbd:generate_no_git
-
-**aliases:** _openbd:no_git_
-
-Exactly the same as openbd:generate, just skips the git initialization and commit. This mostly serves as a safe alias for developers who would rather not have the plugin muck about with git commands. 
+Another alternative is to set an environment variable called OPENBD_HEROKU_NO_GIT to true in your .bashrc or .bash_profile (or whatever you use to setup your environment). It this environment variable is set generate will act as if the --no-git option is always being passed to it.
 
 ### openbd:update
 
