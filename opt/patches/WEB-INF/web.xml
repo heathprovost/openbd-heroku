@@ -8,8 +8,8 @@
     3. Rearranged some of the items so that it parses cleanly by winstone.
     4. Removed index.jsp from welcome-file-list (winstone .jsp support is turned off by default)
     5. Removed index.cfm from the welcome-file-list (it is handled using urlrewrite.xml)
-    5. Normalized indention and spacing.
-    6. Replaced SE friendly url filter with tuckey urlRewriteFilter for more flexibility.
+    6. Normalized indention and spacing.
+    7. Replaced SE friendly url filter with tuckey urlRewriteFilter for more flexibility.
 -->
 
 <web-app>
