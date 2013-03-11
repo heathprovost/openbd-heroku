@@ -239,9 +239,10 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   #  Current Project
   # 
   #  local name:       openbd-project
-  #  heroku app:       (not created)
   #  last commit:      Sat, 9 Mar 2013 02:24:49 -0600
   #  deployment mode:  Thin (OpenBD v3.0)
+  #  heroku app name:  openbd-project
+  #  admin password:   xxxxxxxxxx
   #
   #  Available OpenBD versions:
   # 
@@ -256,6 +257,13 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   #  nightly:          cached 2013-03-07
   #
   def info
+    begin
+      heroku_app = app
+      admin_password = api.get_config_vars(app).body["OPENBD_PASSWORD"]
+    rescue
+      heroku_app = "(not created)"
+      admin_password = "(not set)"
+    end    
     display "--------------------------------------------------"
     display " openbd-heroku v#{PLUGIN_VERSION}"
     display "--------------------------------------------------"
@@ -264,15 +272,6 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       display " Current Project"
       display " "
       printf " %-17s %s\n", "local name:", File.basename(CURR_DIR)
-      begin
-        heroku_app = app
-      rescue
-      end
-      if heroku_app
-        printf " %-17s %s\n", "heroku app:", heroku_app 
-      else
-        printf " %-17s %s\n", "heroku app:", "(not created)"
-      end
       if File.directory? ".git"
         output = `git log --all --format=format:'%aD' --abbrev-commit --date=relative -1`
         printf " %-17s %s\n", "last commit:", output.tr('"', '').tr("'", '')
@@ -285,6 +284,8 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       else
         printf " %-17s %s\n", "deployment mode:", "Full Engine"
       end
+      printf " %-17s %s\n", "heroku app name:", heroku_app 
+      printf " %-17s %s\n", "admin password:", admin_password
     end
     display " "
     display " Available OpenBD versions:"
