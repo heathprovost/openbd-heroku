@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 4.0//EN" "http://www.tuckey.org/res/dtds/urlrewrite4.0.dtd">
+
+<urlrewrite>
+
+  <rule>
+    <note>
+      Forward all requests ending with a slash, but NOT proceded by a url containing 
+      a period, to */index.cfm. Winstone handles welcome files using redirects, which 
+      is different from jetty which uses forwards. This replaces welcome file handling
+      for index.cfm files and makes winstone act more like jetty.
+    </note>
+    <from>^(((?!\.).)*/)$</from>
+    <to last="true">$1index.cfm</to>
+  </rule>
+
+  <rule>
+    <note>
+      Search Engine Friendly URLs. This replicates the behavior of the default SEO
+      filter provided by OpenBD (com.newatlanta.filters.SearchEngineFriendlyURLFilter).
+    </note>
+    <from>^([^\.]+\.cfml?)/.+$</from>
+    <to last="true">$1</to>
+  </rule>
+
+</urlrewrite>

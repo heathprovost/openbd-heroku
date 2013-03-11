@@ -45,6 +45,8 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
   # -----> Patching /WEB-INF/web.xml... done
   # -----> Patching /WEB-INF/bluedragon/bluedragon.xml... done
   # -----> Patching /WEB-INF/bluedragon/component.cfc... done
+  # -----> Adding /WEB-INF/urlrewrite.xml... done
+  # -----> Adding /WEB-INF/lib/urlrewritefilter-4.0.3.jar... done
   # Initialized empty Git repository in /openbd/foo/.git/
   # [master (root-commit) 58d6e30] 1st commit
   # 7 files changed, 255 insertions(+), 0 deletions(-)
@@ -399,16 +401,19 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       write_file "#{project_dir}/Procfile", "web: java $JAVA_OPTS -Dlog4j.configuration=file:WEB-INF/bluedragon/log4j.properties -jar $HOME/.heroku/plugins/openbd-heroku/opt/server-engines/winstone-lite-0.9.10.jar --commonLibFolder=$HOME/.openbd-heroku/cache/#{version}/WEB-INF/lib --webroot=. --httpPort=$PORT"
     end
     #Copy patched files
+    if not File.exists? "#{HOME_PATH}/cache/#{version}/WEB-INF/lib/urlrewritefilter-4.0.3.jar"
+      FileUtils.cp "#{PLUGIN_PATH}/opt/patches/WEB-INF/lib/urlrewritefilter-4.0.3.jar", "#{HOME_PATH}/cache/#{version}/WEB-INF/lib/urlrewritefilter-4.0.3.jar"
+    end
     if full_engine
-      patchfiles = ["/WEB-INF/bluedragon/log4j.properties", "/WEB-INF/web.xml", "/WEB-INF/bluedragon/bluedragon.xml", "/WEB-INF/bluedragon/component.cfc"]
+      patchfiles = ["/WEB-INF/bluedragon/log4j.properties", "/WEB-INF/web.xml", "/WEB-INF/bluedragon/bluedragon.xml", "/WEB-INF/bluedragon/component.cfc", "/WEB-INF/urlrewrite.xml"]
     else
-      patchfiles = ["/index.cfm", "/WEB-INF/bluedragon/log4j.properties", "/WEB-INF/web.xml", "/WEB-INF/bluedragon/bluedragon.xml", "/WEB-INF/bluedragon/component.cfc"]
+      patchfiles = ["/index.cfm", "/WEB-INF/bluedragon/log4j.properties", "/WEB-INF/web.xml", "/WEB-INF/bluedragon/bluedragon.xml", "/WEB-INF/bluedragon/component.cfc", "/WEB-INF/urlrewrite.xml"]
     end
     patchfiles.each { |file|
       do_copy = true
       if File.file?("#{project_dir}#{file}")
         do_copy = false
-        if file == "/WEB-INF/web.xml" or file == "/WEB-INF/bluedragon/bluedragon.xml"
+        if file == "/WEB-INF/web.xml" or file == "/WEB-INF/bluedragon/bluedragon.xml" or file == "/WEB-INF/urlrewrite.xml"
           if overwrite_config or full_engine
             FileUtils.rm "#{project_dir}#{file}"
             redisplay "-----> Patching #{file}..."
@@ -476,6 +481,7 @@ class Heroku::Command::Openbd < Heroku::Command::BaseWithApp
       redisplay "-----> Using OpenBD #{version}... extracting" 
       unzip(savefile, filepath)
       File.delete(savefile)
+      FileUtils.cp "#{PLUGIN_PATH}/opt/patches/WEB-INF/lib/urlrewritefilter-4.0.3.jar", "#{filepath}/WEB-INF/lib/urlrewritefilter-4.0.3.jar"
       redisplay "-----> Using OpenBD #{version}... done\n" 
     end
   end

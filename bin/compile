@@ -63,6 +63,7 @@ else
     jar xf openbd.war
     rm -f openbd.war
     cp -r ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-${OPENBD_VERSION}.txt ${CACHE_DIR}/webroot/WEB-INF/lib
+    cp -r ${OPT_DIR}/patches/WEB-INF/lib/urlrewritefilter-4.0.3.jar ${CACHE_DIR}/webroot/WEB-INF/lib
     echo " done"
   else
     cd $CACHE_DIR/webroot

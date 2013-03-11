@@ -7,28 +7,19 @@
     2. Uses Doctype dtd instead of xsd (for best behavior with winstone servlet engine)
     3. Rearranged some of the items so that it parses cleanly by winstone.
     4. Removed index.jsp from welcome-file-list (winstone .jsp support is turned off by default)
+    5. Removed index.cfm from the welcome-file-list (it is handled using urlrewrite.xml)
     5. Normalized indention and spacing.
-    6. Enabled SEO filter for all versions (was originally commented out prior to 2.0 release)
+    6. Replaced SE friendly url filter with tuckey urlRewriteFilter for more flexibility.
 -->
 
 <web-app>
   
   <filter>
-    <filter-name>SearchEngineFriendlyURLFilter</filter-name>
-    <display-name>SearchEngineFriendlyURLFilter</display-name>
-    <description>SearchEngineFriendlyURLFilter</description>
-    <filter-class>com.newatlanta.filters.SearchEngineFriendlyURLFilter</filter-class>
-    <init-param>
-      <param-name>extensions</param-name>
-      <param-value>cfml,cfm</param-value>
-    </init-param>
-    <init-param>
-      <param-name>debug</param-name>
-      <param-value>false</param-value>
-    </init-param>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
   </filter>
   <filter-mapping>
-    <filter-name>SearchEngineFriendlyURLFilter</filter-name>
+    <filter-name>UrlRewriteFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
@@ -129,7 +120,7 @@
   </mime-mapping>
 
   <welcome-file-list>
-    <welcome-file>index.cfm</welcome-file>
+    <!-- index.cfm is handled by urlrewrite -->
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>
   </welcome-file-list>
