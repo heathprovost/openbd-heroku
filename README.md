@@ -69,6 +69,15 @@ This command creates your application on Heroku. It works and acts more or less 
 
 Displays information about the plugin and your current project (when run inside your project folder). This will display quite a bit of usefule information - the name of your heroku app, the date and time of your last commit, and the deployment model and version of OpenBD used. It will also list all of the versions of OpenBD that are available for use.
 
+OpenBD Customization
+-----
+
+When provisioning OpenBD, the .war file for the specified version is pulled from [openbd.org](http://openbd.org) as needed. Some minor customizations are performed to make things work smoothly on heroku:
+
+1. The `web.xml` file is modified slightly to work better with Winstone, the servlet engine being used to run OpenBD.
+2. The default `bluedraogn.xml` file used is normalized to work with all versions of the engine.
+3. OpenBD includes a search engine friendly url filter. This filter is replaced with [urlrewrite](http://tuckey.org/urlrewrite/). It is configured to work identically to the defautl filter, but by using it instead you gain the ability to customize it to your own needs if you require additional rewrite rules. You can edit `/WEB-INF/urlrewrite.xml` to create additional rules if desired.
+
 Buildpack
 -----
 
