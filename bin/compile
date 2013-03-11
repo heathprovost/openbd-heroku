@@ -17,6 +17,8 @@ CACHE_DIR=$2
 LOGGER_FLAGS=""
 OPENBD_VERSION="unknown"
 KEEP_CACHE="false"
+OK_OPENBD_VERSIONS=("nightly" "1.1" "1.2" "1.3" "1.4" "2.0" "2.0.1" "2.0.2" "3.0")
+ENGINE_FOLDERS=("bluedragon" "WEB-INF/lib" "WEB-INF/webresources")
 
 #move everything into webroot folder
 cd ${BUILD_DIR}
@@ -25,50 +27,16 @@ cp -r * .webroot
 mv .webroot webroot
 
 #figure out version used if a thin deployment
-if [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-nightly.txt ]]; then
-  OPENBD_VERSION="nightly"
-  KEEP_CACHE="false" #never cache nightlies
-elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.1.txt ]]; then
-  OPENBD_VERSION="1.1"
-  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.1.txt ]]; then
-    KEEP_CACHE="true"
+for i in ${OK_OPENBD_VERSIONS[@]}
+do
+  if [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-${i}.txt ]]; then
+    OPENBD_VERSION=$i
+    if [[ $i != "nightly" ]]; then
+      KEEP_CACHE="true"
+    fi
+    break
   fi
-elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.2.txt ]]; then
-  OPENBD_VERSION="1.2"
-  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.2.txt ]]; then
-    KEEP_CACHE="true"
-  fi
-elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.3.txt ]]; then
-  OPENBD_VERSION="1.3"
-  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.3.txt ]]; then
-    KEEP_CACHE="true"
-  fi
-elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.4.txt ]]; then
-  OPENBD_VERSION="1.4"
-  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-1.4.txt ]]; then
-    KEEP_CACHE="true"
-  fi
-elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.txt ]]; then
-  OPENBD_VERSION="2.0"
-  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.txt ]]; then
-    KEEP_CACHE="true"
-  fi
-elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.1.txt ]]; then
-  OPENBD_VERSION="2.0.1"
-  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.1.txt ]]; then
-    KEEP_CACHE="true"
-  fi
-elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.2.txt ]]; then
-  OPENBD_VERSION="2.0.2"
-  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-2.0.2.txt ]]; then
-    KEEP_CACHE="true"
-  fi
-elif [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-3.0.txt ]]; then
-  OPENBD_VERSION="3.0"
-  if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-3.0.txt ]]; then
-    KEEP_CACHE="true"
-  fi
-fi
+done
 
 if [ $KEEP_CACHE == "false" ]; then
   rm -rf $CACHE_DIR
@@ -100,36 +68,19 @@ else
     cd $CACHE_DIR/webroot
   fi  
   echo -n "-----> Installing OpenBD ${OPENBD_VERSION}..."
-  if [ -f ${BUILD_DIR}/webroot/bluedragon ]; then
-    mv ${BUILD_DIR}/webroot/bluedragon ${BUILD_DIR}/org-bluedragon
-    mkdir -p ${BUILD_DIR}/webroot/bluedragon
-    cp -r bluedragon/* ${BUILD_DIR}/webroot/bluedragon
-    cp -r ${BUILD_DIR}/webroot/org-bluedragon/* ${BUILD_DIR}/webroot/bluedragon
-    rm -rf ${BUILD_DIR}/webroot/org-bluedragon
-  else
-    mkdir -p ${BUILD_DIR}/webroot/bluedragon
-    cp -r bluedragon/* ${BUILD_DIR}/webroot/bluedragon
-  fi
-  if [ -f ${BUILD_DIR}/webroot/WEB-INF/lib ]; then
-    mv ${BUILD_DIR}/webroot/WEB-INF/lib ${BUILD_DIR}/webroot/WEB-INF/org-lib
-    mkdir -p ${BUILD_DIR}/webroot/WEB-INF/lib
-    cp -r WEB-INF/lib/* ${BUILD_DIR}/webroot/WEB-INF/lib
-    cp -r ${BUILD_DIR}/webroot/WEB-INF/org-lib/* ${BUILD_DIR}/webroot/WEB-INF/lib
-    rm -rf ${BUILD_DIR}/webroot/WEB-INF/org-lib
-  else
-    mkdir -p ${BUILD_DIR}/webroot/WEB-INF/lib
-    cp -r WEB-INF/lib/* ${BUILD_DIR}/webroot/WEB-INF/lib
-  fi
-  if [ -f ${BUILD_DIR}/webroot/WEB-INF/webresources ]; then
-    mv ${BUILD_DIR}/webroot/WEB-INF/webresources ${BUILD_DIR}/webroot/WEB-INF/org-webresources
-    mkdir -p ${BUILD_DIR}/webroot/WEB-INF/webresources
-    cp -r WEB-INF/webresources/* ${BUILD_DIR}/webroot/WEB-INF/webresources
-    cp -r ${BUILD_DIR}/webroot/WEB-INF/org-webresources/* ${BUILD_DIR}/webroot/WEB-INF/webresources
-    rm -rf ${BUILD_DIR}/webroot/WEB-INF/org-webresources
-  else
-    mkdir -p ${BUILD_DIR}/webroot/WEB-INF/webresources
-    cp -r WEB-INF/webresources/* ${BUILD_DIR}/webroot/WEB-INF/webresources
-  fi
+  for i in ${ENGINE_FOLDERS[@]}
+  do
+    if [ -f ${BUILD_DIR}/webroot/${i} ]; then
+      mv ${BUILD_DIR}/webroot/${i} ${BUILD_DIR}/${i}-org
+      mkdir -p ${BUILD_DIR}/webroot/${i}
+      cp -r ${i}/* ${BUILD_DIR}/webroot/${i}
+      cp -r ${BUILD_DIR}/webroot/${i}-org/* ${BUILD_DIR}/webroot/${i}
+      rm -rf ${BUILD_DIR}/webroot/${i}-org
+    else
+      mkdir -p ${BUILD_DIR}/webroot/${i}
+      cp -r ${i}/* ${BUILD_DIR}/webroot/${i}
+    fi
+  done  
   if [ ! -f ${BUILD_DIR}/${SERVLET_ENGINE} ]; then
     cp ${OPT_DIR}/server-engines/${SERVLET_ENGINE} ${BUILD_DIR}
   fi
