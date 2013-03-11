@@ -31,8 +31,10 @@ for i in ${OK_OPENBD_VERSIONS[@]}
 do
   if [[ -f ${BUILD_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-${i}.txt ]]; then
     OPENBD_VERSION=$i
-    if [[ $i != "nightly" ]]; then
-      KEEP_CACHE="true"
+    if [[ -f ${CACHE_DIR}/webroot/WEB-INF/lib/openbd-heroku-readme-${i}.txt ]]; then
+      if [[ $i != "nightly" ]]; then
+        KEEP_CACHE="true"
+      fi
     fi
     break
   fi
